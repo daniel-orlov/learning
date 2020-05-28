@@ -10,7 +10,7 @@ func main() {
 	//Using a function with a for-loop
 	fmt.Println(forLoopFactorial(5))
 	//Hard-coding it like there's no tomorrow
-	fmt.Println(5*4*3*2*1)
+	fmt.Println(5 * 4 * 3 * 2 * 1)
 }
 
 func forLoopFactorial(n int) int {

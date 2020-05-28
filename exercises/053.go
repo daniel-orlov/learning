@@ -6,12 +6,12 @@ import "fmt"
 
 type person struct {
 	first, last string
-	age int
+	age         int
 }
 
 type robot struct {
 	serialNumber string
-	needs []string
+	needs        []string
 }
 
 type secretAgent struct {

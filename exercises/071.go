@@ -3,15 +3,15 @@ package main
 /*
 Using label to mark the chunk of code as Loop
 We can also control the code flow using goto Loop
- */
+*/
 
 import "fmt"
 
-func main()  {
+func main() {
 	x := 12
 
 InfNestedLoop:
-	for{
+	for {
 		for {
 			x++
 			fmt.Println(x)

@@ -20,33 +20,33 @@ func chooseDivider(f func(int) bool, num int) bool {
 	return f(num)
 }
 
-func dividesBy2(num int) bool{
-	if num % 2 == 0 {
+func dividesBy2(num int) bool {
+	if num%2 == 0 {
 		return true
-	}else{
+	} else {
 		return false
 	}
 }
 
 func dividesBy3(num int) bool {
-	if num % 3 == 0 {
+	if num%3 == 0 {
 		return true
 	}
 	return false
 }
 
-func dividesBy4(num int) bool{
-	if num % 4 == 0 {
+func dividesBy4(num int) bool {
+	if num%4 == 0 {
 		return true
-	}else{
+	} else {
 		return false
 	}
 }
 
-func dividesBy47(num int) bool{
-	if num % 47 == 0 {
+func dividesBy47(num int) bool {
+	if num%47 == 0 {
 		return true
-	}else{
+	} else {
 		return false
 	}
 }

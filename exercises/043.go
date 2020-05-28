@@ -4,21 +4,21 @@ package main
 
 import "fmt"
 
-type person struct{
+type person struct {
 	first, last string
-	age int
+	age         int
 }
 
 func main() {
-	user1 := person {
+	user1 := person{
 		first: "Brent",
-		last: "Fikowski",
-		age: 29,
+		last:  "Fikowski",
+		age:   29,
 	}
-	user2 := person {
+	user2 := person{
 		first: "Pat",
-		last: "Vellner",
-		age: 29,
+		last:  "Vellner",
+		age:   29,
 	}
 	fmt.Println(user1)
 	fmt.Println(user2)

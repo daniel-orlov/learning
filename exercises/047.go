@@ -22,7 +22,7 @@ func main() {
 	}
 	pers2 := person{
 		first: "Pooh",
-		last: "The Master",
+		last:  "The Master",
 		favFlavours: []string{
 			"raspberry",
 			"honey",
@@ -34,7 +34,7 @@ func main() {
 		pers2.first: pers2,
 	}
 
-	for _,v := range friends {
+	for _, v := range friends {
 		for _, temp := range v.favFlavours {
 			fmt.Printf("%v %v loves ice-cream with %v flavour\n", pers1.first, pers1.last, temp)
 		}

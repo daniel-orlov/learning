@@ -35,15 +35,15 @@ type sedan struct {
 }
 
 func main() {
-	teslaCybertruck := truck {
+	teslaCybertruck := truck{
 		vehicle: vehicle{
 			doors: 4,
 			color: "metal",
 		},
 		fwd: true,
 	}
-	teslaModel3 := sedan {
-		vehicle : vehicle{
+	teslaModel3 := sedan{
+		vehicle: vehicle{
 			doors: 4,
 			color: "white",
 		},

@@ -4,7 +4,7 @@ package main
 
 import "fmt"
 
-func main(){
+func main() {
 	g := (1 == 0)
 	h := (24 <= 42)
 	i := (77 >= 77)

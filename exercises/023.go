@@ -6,7 +6,7 @@ import "fmt"
 
 func main() {
 	d := 4
-	for i := 10; i <101; i++{
+	for i := 10; i < 101; i++ {
 		fmt.Printf("%v is divided by %v. The remainder is %v\n", i, d, i%4)
 	}
 }

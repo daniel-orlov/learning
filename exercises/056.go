@@ -5,8 +5,8 @@ package main
 import "fmt"
 
 func main() {
-	boxes := []int {
-		1,31,54,54,12,54,56,5,87,32,
+	boxes := []int{
+		1, 31, 54, 54, 12, 54, 56, 5, 87, 32,
 	}
 	resultAllNums := sum(boxes...)
 	fmt.Println(resultAllNums)
@@ -16,25 +16,25 @@ func main() {
 	fmt.Println(resultOddNums)
 }
 
-func sum(nums... int) int {
+func sum(nums ...int) int {
 	total := 0
-	for _, v := range nums{
+	for _, v := range nums {
 		total += v
 	}
 	return total
 }
 
-func evenOrOdd(modeEven bool, nums... int) []int {
+func evenOrOdd(modeEven bool, nums ...int) []int {
 	var result []int
 	if modeEven {
-		for _, num := range nums{
-			if num % 2 == 0 {
+		for _, num := range nums {
+			if num%2 == 0 {
 				result = append(result, num)
 			}
 		}
-	}else{
-		for _, num := range nums{
-			if num % 2 == 1 {
+	} else {
+		for _, num := range nums {
+			if num%2 == 1 {
 				result = append(result, num)
 			}
 		}

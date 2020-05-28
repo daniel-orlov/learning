@@ -4,21 +4,20 @@ package main
 
 import "fmt"
 
-func main()  {
+func main() {
 	scandinavia := map[string]string{
-		"Sweden": "Stockholm",
-		"Norway": "Oslo",
+		"Sweden":  "Stockholm",
+		"Norway":  "Oslo",
 		"Denmark": "Copenhagen",
 		"Iceland": "Rejkjavik",
 	}
-	func (){
-		for k,c := range scandinavia {
+	func() {
+		for k, c := range scandinavia {
 			if len(k) > len(c) {
 				fmt.Printf("%v: true\n", k)
-			}else{
+			} else {
 				fmt.Printf("%v: false\n", k)
 			}
 		}
 	}()
 }
-

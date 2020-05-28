@@ -6,8 +6,8 @@ import "fmt"
 
 func main() {
 	wod := struct {
-		name, sort string
-		content map[string][]int
+		name, sort      string
+		content         map[string][]int
 		equipmentNeeded []string
 	}{
 		name: "Fran",

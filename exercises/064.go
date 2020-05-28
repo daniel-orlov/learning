@@ -19,5 +19,5 @@ func selector(mode bool) func() string {
 			return "This Is Funcception"
 		}
 	}
-return selector(true)
+	return selector(true)
 }

@@ -6,7 +6,7 @@ import "fmt"
 
 type person struct {
 	first, last string
-	age int
+	age         int
 }
 
 type secretAgent struct {

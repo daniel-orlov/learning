@@ -12,7 +12,7 @@ func main() {
 		if x > 12 {
 			break
 		}
-		if x % 2 != 0 {
+		if x%2 != 0 {
 			continue
 		}
 		fmt.Println(x)

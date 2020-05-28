@@ -2,8 +2,8 @@ package main
 
 import "fmt"
 
-func merge(a []int, b []int) []int  {
-	var res = make([]int, len(a) + len(b))
+func merge(a []int, b []int) []int {
+	var res = make([]int, len(a)+len(b))
 	i := 0
 	j := 0
 
@@ -38,9 +38,9 @@ func Mergesort(sl []int) []int {
 	return merge(a, b)
 }
 
-func main()  {
-	s := []int {
-		10,43,1,33,2,7,9,4,
+func main() {
+	s := []int{
+		10, 43, 1, 33, 2, 7, 9, 4,
 	}
 	fmt.Print(Mergesort(s))
 }

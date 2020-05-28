@@ -4,7 +4,7 @@ package main
 
 import "fmt"
 
-func main () {
+func main() {
 	var have_symptoms bool
 	var days_passed int //since you are back from your trip
 
@@ -14,7 +14,7 @@ func main () {
 	if have_symptoms {
 		fmt.Println("Self-quarantine and notify your recent contacts, if any")
 	} else if !have_symptoms && days_passed < 15 {
-		fmt.Printf("Sorry, no meetings for you for at least %v days", 15 - days_passed)
+		fmt.Printf("Sorry, no meetings for you for at least %v days", 15-days_passed)
 	} else {
 		fmt.Println("Stop reading Twitter")
 	}

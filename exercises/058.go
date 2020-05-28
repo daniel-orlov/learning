@@ -14,7 +14,7 @@ func main() {
 }
 
 func bar() (int, string) {
-	return (foo() + 10005) , "this is a BAR"
+	return (foo() + 10005), "this is a BAR"
 }
 
 func foo(...int) int {

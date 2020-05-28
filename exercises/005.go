@@ -7,6 +7,7 @@ package main
 import "fmt"
 
 type question int
+
 var x question
 var y int
 

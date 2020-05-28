@@ -6,9 +6,9 @@ import "fmt"
 
 func main() {
 	pers_bests := map[string]int{
-		"Deadlift": 	180,
+		"Deadlift":     180,
 		"Strict Press": 60,
-		"Strict MU": 	0,
+		"Strict MU":    0,
 	}
 	fmt.Println(pers_bests)
 	fmt.Println(pers_bests["Deadlift"])
@@ -29,9 +29,9 @@ func main() {
 	fmt.Println(ok)
 	//Common use of the principle above
 	if v, ok := pers_bests["DUs"]; ok {
-		fmt.Println("Value for DUs PR is",v) //this doesn't get printed
+		fmt.Println("Value for DUs PR is", v) //this doesn't get printed
 	}
 	if v, ok := pers_bests["Strict Press"]; ok {
-		fmt.Println("The value for Strict Press PR was",v, "kilos") //this gets printed; also that's before quarantine, so probably outdated
+		fmt.Println("The value for Strict Press PR was", v, "kilos") //this gets printed; also that's before quarantine, so probably outdated
 	}
 }

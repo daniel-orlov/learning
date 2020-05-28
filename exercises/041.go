@@ -6,7 +6,7 @@ import "fmt"
 
 func main() {
 	favourites := map[string][]string{
-		`bond_james`:  []string{
+		`bond_james`: []string{
 			`Shaken, not stirred`, `Martinis`, `Women`,
 		},
 		`moneypenny_miss`: []string{

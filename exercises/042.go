@@ -6,7 +6,7 @@ import "fmt"
 
 func main() {
 	favourites := map[string][]string{
-		`bond_james`:  []string{
+		`bond_james`: []string{
 			`Shaken, not stirred`, `Martinis`, `Women`,
 		},
 		`moneypenny_miss`: []string{
@@ -36,7 +36,7 @@ func main() {
 	}
 	//deleting a record
 	fmt.Printf("\nDeleting a record...\n\n")
-	delete(favourites, "no_dr" )
+	delete(favourites, "no_dr")
 	//printing out
 	for k, _ := range favourites {
 		fmt.Printf("Record for %v:\n", k)

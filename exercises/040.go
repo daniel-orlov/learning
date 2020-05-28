@@ -9,7 +9,7 @@ package main
 
 import "fmt"
 
-func main () {
+func main() {
 	jb := []string{
 		"James", "Bond", "Shaken, not stirred",
 	}

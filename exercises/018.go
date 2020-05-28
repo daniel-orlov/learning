@@ -5,7 +5,7 @@ package main
 import "fmt"
 
 func main() {
-	for x:= 65; x <= 122; x++ {
+	for x := 65; x <= 122; x++ {
 		fmt.Printf("%v\t%#U\n", x, x)
 	}
 }

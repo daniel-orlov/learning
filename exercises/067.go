@@ -5,7 +5,7 @@ package main
 
 import "fmt"
 
-func main()  {
+func main() {
 	x := 789
 	y := &x
 	fmt.Println(y)

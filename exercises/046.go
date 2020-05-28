@@ -26,7 +26,7 @@ func main() {
 	}
 	pers2 := person{
 		first: "Pooh",
-		last: "The Master",
+		last:  "The Master",
 		favFlavours: []string{
 			"raspberry",
 			"honey",

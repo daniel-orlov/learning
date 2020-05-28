@@ -4,7 +4,7 @@ package main
 
 import "fmt"
 
-func main()  {
+func main() {
 	x := 47
 	y := 12
 	fmt.Println("This is main.func body comparison:", x > y)

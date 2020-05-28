@@ -6,6 +6,7 @@ package main
 import "fmt"
 
 type question int
+
 var x question
 
 func main() {

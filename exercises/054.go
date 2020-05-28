@@ -4,7 +4,7 @@ package main
 
 import "fmt"
 
-func withName(name string){
+func withName(name string) {
 	fmt.Println("I am a func with a name! The name is", name)
 }
 

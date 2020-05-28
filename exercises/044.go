@@ -4,9 +4,9 @@ package main
 
 import "fmt"
 
-type person struct{
+type person struct {
 	first, last string
-	age int
+	age         int
 }
 
 type crossfitter struct {
@@ -15,23 +15,22 @@ type crossfitter struct {
 }
 
 func main() {
-	cf1 := crossfitter {
-		person: person {
+	cf1 := crossfitter{
+		person: person{
 			first: "Brent",
-			last: "Fikowski",
-			age: 29,
+			last:  "Fikowski",
+			age:   29,
 		},
 		background: "volleyball",
 	}
 	cf2 := crossfitter{
-		person: person {
+		person: person{
 			first: "Pat",
-			last: "Vellner",
-			age: 29,
+			last:  "Vellner",
+			age:   29,
 		},
 		background: "gymnastics",
 	}
-
 
 	fmt.Println(cf1)
 	fmt.Println(cf2)

@@ -12,12 +12,12 @@ import "fmt"
 
 func main() {
 	//Using anonymous struct
-	p1 := struct{
+	p1 := struct {
 		first, last string
-		is_artist bool
+		is_artist   bool
 	}{
-		first: "Frank",
-		last: "Sinatra",
+		first:     "Frank",
+		last:      "Sinatra",
 		is_artist: true,
 	}
 	fmt.Println(p1)
