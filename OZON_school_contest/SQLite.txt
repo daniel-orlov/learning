@@ -1,0 +1,20 @@
+
+
+This query:
+
+select goods_id
+from tag_goods
+group by goods_id
+having count(*) = (select count(*) from tags)
+
+returns all the ids of goods that have all the tags from tags.
+You can use it to return the rows from the table goods with the operator IN:
+
+select * from goods
+where id in (
+  select goods_id
+  from tag_goods
+  group by goods_id
+  having count(*) = (select count(*) from tags)
+)
+
