@@ -10,15 +10,15 @@ Fanning in
  */
 
 func main()  {
-	even_ := make(chan int)
-	odd__ := make(chan int)
+	even  := make(chan int)
+	odd   := make(chan int)
 	fanin := make(chan int)
 
 	//send
-	go send(even_, odd__)
+	go send(even, odd)
 
 	//receive
-	go receive(even_, odd__, fanin)
+	go receive(even, odd, fanin)
 
 	for v := range fanin {
 		fmt.Println(v)
@@ -27,19 +27,19 @@ func main()  {
 	fmt.Println("Exiting...")
 }
 
-func receive(even_, odd__ <-chan int, fanin chan<- int)  {
+func receive(even, odd <-chan int, fanin chan<- int)  {
 	var wg sync.WaitGroup
 	wg.Add(2)
 
 	go func() {
-		for v := range even_ {
+		for v := range even {
 			fanin <- v
 		}
 		wg.Done()
 	}()
 
 	go func() {
-		for v := range odd__ {
+		for v := range odd {
 			fanin <- v
 		}
 		wg.Done()
@@ -49,14 +49,14 @@ func receive(even_, odd__ <-chan int, fanin chan<- int)  {
 	close(fanin)
 }
 
-func send(even_, odd__ chan<- int)  {
+func send(even, odd chan<- int)  {
 	for i := 0; i < 13; i++ {
 		if i % 2 == 0{
-			even_ <- i
+			even <- i
 		} else {
-			odd__ <- i
+			odd <- i
 		}
 	}
-	close(even_)
-	close(odd__)
+	close(even)
+	close(odd)
 }
