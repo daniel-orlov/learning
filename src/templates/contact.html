@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Contact Us</h1>
+    <h4>Hello, {{username}}!</h4>
+    <p>This is a page number {{ page_num }}, because we count from 0</p>
+    <p>Here I will put all the contact details to get more spam from Terry Jenkins, offering me to split unthinkable sums of money</p>
+    <ul>
+        {% for item in nums %}
+            <li>{{ forloop.counter }} – {{ item }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
