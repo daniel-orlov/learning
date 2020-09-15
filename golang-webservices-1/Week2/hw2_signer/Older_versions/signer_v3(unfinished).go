@@ -9,6 +9,7 @@ import(
 	"bufio"
 	"os"
 	// "runtime"
+	es "github.com/pkg/errors"
 )
 
 
@@ -83,7 +84,10 @@ func acceptInput() (chan string) {
 	fmt.Println("Enter numeric values separated by spaces and press 'Enter'")
 	reader := bufio.NewReader(os.Stdin)
 	text, err := reader.ReadString('\n')
-	checkPanic(err)
+	if err != nil {
+		err = es.Wrap(err, "failed to readfrom input")
+		return err
+	}
 	input := make([]string, 0, 100)
 	input = strings.Split(text, " ")
 	size := len(input)
@@ -110,10 +114,4 @@ func main() {
 		}
 	}
 	CombineResults(pipelineOutput)
-}
-
-func checkPanic(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
