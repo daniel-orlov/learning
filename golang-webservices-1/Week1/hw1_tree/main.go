@@ -2,20 +2,49 @@ package main
 
 import (
 	"fmt"
+	es "github.com/pkg/errors"
 	"os"
 	"sort"
 	"strconv"
-	es "github.com/pkg/errors"
 )
+
+//Используй константы, так их проще в коде редактировать
+const (
+	MIDDLEBRANCH = "├───"
+	ENDBRANCH = "└───"
+	FILEFLAG = "-f"
+	USAGE = "usage go run main.go . [-f]"
+)
+
+// объявляй типы в начале файла, так читать удобнее
+type Elem struct {
+	Name, Path, Prefix string
+	Size               int64
+	IsDir              bool
+	Parent             *Elem
+	Children           []*Elem
+}
+
+func (e Elem) FormatSize() string{
+	switch {
+	case e.IsDir:
+		return ""
+	case e.Size > 0:
+		return " (" + strconv.Itoa(int(e.Size)) + "b)"
+	case e.Size == 0:
+		return " (empty)"
+	default:
+		return ""
+	}
+}
 
 func main() {
 	out := os.Stdout //where the output will be stored -> printed out
 	if !(len(os.Args) == 2 || len(os.Args) == 3) {
-		panic("usage go run main.go . [-f]")
+		panic(USAGE)
 	}
-
 	path := os.Args[1]
-	printFiles := len(os.Args) == 3 && os.Args[2] == "-f" //boolean flag
+	printFiles := len(os.Args) == 3 && os.Args[2] == FILEFLAG
 	err := dirTree(out, path, printFiles)
 	if err != nil {
 		fmt.Println(err)
@@ -37,41 +66,25 @@ func dirTree(out *os.File, path string, printFiles bool) error {
 	return nil
 }
 
-type Elem struct {
-	Name, Path, Prefix string
-	Size int64
-	IsDir bool
-	Parent *Elem
-	Children []*Elem
-}
-
 func Represent(elems ...*Elem) string {
 	var repr string
-	branch := "├───"
-	var size string
+	branch := MIDDLEBRANCH
+	lastIndex := len(elems)-1
 	for index, l := range elems {
 		//Checking branch type
-		if index == len(elems)-1 {
-			branch = "└───"
+		if index == lastIndex {
+			branch = ENDBRANCH
 		}
 		//Adding prefixes to children
-		if len(l.Children) > 0 && index != len(elems)-1 {
-			for _, child := range l.Children {
-				child.Prefix += "│\t" + child.Parent.Prefix
+		for _, child := range l.Children {
+			if index != lastIndex {
+				child.Prefix += child.Parent.Prefix + "│\t"
+				continue
 			}
-		} else if len(l.Children) > 0{
-			for _, child := range l.Children {
-				child.Prefix += child.Parent.Prefix + "\t"
-			}
+			child.Prefix += child.Parent.Prefix + "\t"
 		}
 		//Adding size
-		if !l.IsDir && l.Size > 0 {
-			size = " (" + strconv.Itoa(int(l.Size)) + "b)"
-		} else if !l.IsDir && l.Size == 0{
-			size = " (empty)"
-		} else if l.IsDir {
-			size = ""
-		}
+		size := l.FormatSize()
 		//Representing
 		repr += l.Prefix + branch + l.Name + size + "\n"
 		//Calling Represent on children
@@ -83,20 +96,24 @@ func Represent(elems ...*Elem) string {
 	return repr
 }
 
-func StudyDirectory(parent *Elem, printFiles bool) ([]*Elem, error) {
+func StudyDirectory(parent *Elem, printFiles bool) (res []*Elem, err error) {
 	//Open/close file
 	parentDir, err := os.Open(parent.Path)
 	if err != nil {
 		err = es.Wrap(err, "failed to open parentDir")
 		return nil, err
 	}
-	defer parentDir.Close()
+	defer func() {
+		//defer вызывается перед возвращением значения из функции, но после присвоения возвращаемых значений,
+		//используя именованные возвращаемые значения можно такой трюк проворачивать
+		err = parentDir.Close()
+	}()
 
 	//Os-independent separator
 	separator := string(os.PathSeparator)
 
 	//Reading from root dir and sorting the output
-	names := make([]os.FileInfo, 0, 15)
+	names := make([]os.FileInfo, 0)
 	names, err = parentDir.Readdir(0)
 	if err != nil {
 		err = es.Wrap(err, "failed to Readdir from parentDir")
@@ -105,18 +122,18 @@ func StudyDirectory(parent *Elem, printFiles bool) ([]*Elem, error) {
 	sort.Slice(names, func(i, j int) bool { return names[i].Name() < names[j].Name() })
 
 	//Iterating over the dir contents and pouplating a slice of pointers to Elem
-	children := make([]*Elem, 0, 25)
-	for _, file := range names{
+	children := make([]*Elem, 0, len(names))
+	for _, file := range names {
 		// Checking the flag
 		if !file.IsDir() && !printFiles {
 			continue
 		}
 		el := Elem{
-			Name: file.Name(),
-			Path: parent.Path + separator + file.Name(),
+			Name:   file.Name(),
+			Path:   parent.Path + separator + file.Name(),
 			Parent: parent,
-			Size: file.Size(),
-			IsDir: file.IsDir(),
+			Size:   file.Size(),
+			IsDir:  file.IsDir(),
 		}
 		//Studying underlying directories encountered
 		if el.IsDir {
