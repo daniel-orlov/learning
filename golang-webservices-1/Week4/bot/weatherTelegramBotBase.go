@@ -239,15 +239,15 @@ func (wr *FullWeatherReport) formatNow() string {
 	return l0 + l1 + l2 + l3 + l4 + l5 + l6 + l7 + l8
 }
 
-func (wr *FullWeatherReport) formatForecast(period, step int) string {
-	formatted := fmt.Sprintf("%v-h forecast for %v:\n ", period, wr.CityName)
-	for i := 0; i < period; i += step {
-		 formatted += fmt.Sprintf(
-		 	" %c%c%v m/sec\n", emojis["Wind"], wr.formatWindDirection(i),
-		 math.Round(wr.Data[i].WindSpeedMs),
-		 )
-	}
-}
+// func (wr *FullWeatherReport) formatForecast(period, step int) string {
+// 	formatted := fmt.Sprintf("%v-h forecast for %v:\n ", period, wr.CityName)
+// 	for i := 0; i < period; i += step {
+// 		 formatted += fmt.Sprintf(
+// 		 	" %c%c%v m/sec\n", emojis["Wind"], wr.formatWindDirection(i),
+// 		 math.Round(wr.Data[i].WindSpeedMs),
+// 		 )
+// 	}
+// }
 
 func main() {
 	//creating a new BotAPI instance using token
@@ -281,8 +281,8 @@ func main() {
 	forecastMenu := tgbotapi.NewKeyboardButtonRow(
 		tgbotapi.NewKeyboardButton(`Now`),
 		tgbotapi.NewKeyboardButton(`2 days`),
-		// tgbotapi.NewKeyboardButton(`5 days`),
-		// tgbotapi.NewKeyboardButton(`10 days`),
+		tgbotapi.NewKeyboardButton(`5 days`),
+		tgbotapi.NewKeyboardButton(`10 days`),
 		tgbotapi.NewKeyboardButton(`< Back`))
 
 	//handling messages from user
@@ -338,25 +338,13 @@ func main() {
 				msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
 				bot.Send(msg)
 			}
-		case "2 days":
+		case "2 days", "5 days", "10 days":
 			{
-				forecast, err := getForecast(loc, text)
-				if err != nil {
-					err = es.Wrap(err, "failed to getForecast:")
-					fmt.Println(err)
-				}
-				wr, err := parseWeather(forecast)
-				if err != nil {
-					err = es.Wrap(err, "failed to parseWeather:")
-					fmt.Println(err)
-				}
-				repr := wr.formatForecast()
-				msg := tgbotapi.NewMessage(chatID, repr)
+				text := "Under development"
+				msg := tgbotapi.NewMessage(chatID, text)
 				msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
 				bot.Send(msg)
 			}
-		// case "5 days":
-		// case "10 days":
 
 		// default:
 		// 	{
