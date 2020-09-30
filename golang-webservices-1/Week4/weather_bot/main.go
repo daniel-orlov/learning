@@ -164,13 +164,13 @@ func main() {
 				msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
 				bot.Send(msg)
 			}
-			//case "10 days":
-			//		{
-			//			text := "Under development"
-			//			msg := tgbotapi.NewMessage(chatID, text)
-			//			msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
-			//			bot.Send(msg)
-			//		}
+		case "A different place":
+			{
+				text := "Under development"
+				msg := tgbotapi.NewMessage(chatID, text)
+				msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
+				bot.Send(msg)
+			}
 		}
 	}
 }
