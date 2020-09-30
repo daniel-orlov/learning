@@ -55,6 +55,8 @@ type Stat struct {
 	Weather          `json:"weather"`
 	Temperature      float64 `json:"temp"`
 	FeelsLikeTemp    float64 `json:"app_temp"`
+	HighTemp         float64 `json:"high_temp"`
+	LowTemp          float64 `json:"low_temp"`
 }
 
 type Weather struct {
@@ -62,70 +64,71 @@ type Weather struct {
 	Description string `json:"description"`
 }
 
+func formatCity(city string) string {
+	/*Formats City into a string
+	NB: only to be used inside formatNow
+	*/
+	fmtCity := fmt.Sprintf(
+		"Weather in %v:\n", city,
+	)
+	return fmtCity
+}
+
+func AddNewLine(data Stat) string {
+	/*Adds a new line
+	 */
+	_ = data
+	return "\n"
+}
 func formatAqi(data Stat) string {
 	/*Formats AQI into a string,
 	adding an emoji and a comment
 	*/
 	fmtAqi := ""
 	prefix := "Air Quality Index: "
+	comment := "Unknown"
+	emoji := emojis["Question"]
 	var aqi = data.IndexAirQuality
 	switch {
 	case aqi <= 50:
-		fmtAqi = fmt.Sprintf(
-			"%v%v %c Good\n", prefix, aqi, emojis["Check"],
-		)
+		comment = "Good"
+		emoji = emojis["Check"]
 	case aqi > 50 && aqi <= 100:
-		fmtAqi = fmt.Sprintf(
-			"%v%v %c Moderate\n", prefix, aqi, emojis["Check"],
-		)
+		comment = "Moderate"
+		emoji = emojis["Check"]
 	case aqi > 101 && aqi <= 150:
-		fmtAqi = fmt.Sprintf(
-			"%v%v %c Unhealthy for Sensitive Groups\n", prefix, aqi, emojis["Smoking"],
-		)
+		comment = "Unhealthy for Sensitive Groups"
+		emoji = emojis["Smoking"]
 	case aqi > 151 && aqi <= 200:
-		fmtAqi = fmt.Sprintf(
-			"%v%v %c Unhealthy\n", prefix, aqi, emojis["Warning"],
-		)
+		comment = "Unhealthy"
+		emoji = emojis["Warning"]
 	case aqi > 201 && aqi <= 300:
-		fmtAqi = fmt.Sprintf(
-			"%v%v %c Very Unhealthy\n", prefix, aqi, emojis["Warning"],
-		)
+		comment = "Very Unhealthy"
+		emoji = emojis["Warning"]
 	case aqi > 301 && aqi <= 500:
-		fmtAqi = fmt.Sprintf(
-			"%v%v %c Hazardous\n", prefix, aqi, emojis["Cross"],
-		)
-	default:
-		fmtAqi = fmt.Sprintf(
-			"%v%c Unknown\n", prefix,
-			emojis["Question"],
-		)
+		comment = "Hazardous"
+		emoji = emojis["Cross"]
 	}
+	fmtAqi = fmt.Sprintf(
+		"%v\n%c %v %v", prefix, emoji, aqi, comment,
+	)
 	return fmtAqi
 }
-func formatCity(data Stat) string {
-	/*Formats City into a string
-	NB: only to be used inside formatNow
-	*/
-	city := data.CityName
-	fmtCity := fmt.Sprintf(
-		"Weather in %v:\n", city,
-	)
-	return fmtCity
-}
-func formatFeelsLikeTemp(data Stat) string {
-	/*Formats FeelsLike Temperature into a string,
-	adding a sign
-	*/
-	fmtFeelsLikeTemp := ""
-	prefix := "Feels like"
-	feelsLikeTemp := data.FeelsLikeTemp
-	if feelsLikeTemp > 0 {
-		fmtFeelsLikeTemp = fmt.Sprintf("%v +%v\n", prefix, feelsLikeTemp)
-		return fmtFeelsLikeTemp
-	}
-	fmtFeelsLikeTemp = fmt.Sprintf("%v %v/n", prefix, feelsLikeTemp)
-	return fmtFeelsLikeTemp
-}
+
+//func formatFeelsLikeTemp(data Stat) string {
+//	/*Formats FeelsLike Temperature into a string,
+//	adding a sign
+//	*/
+//	fmtFeelsLikeTemp := ""
+//	prefix := "Feels like"
+//	feelsLikeTemp := data.FeelsLikeTemp
+//	if feelsLikeTemp > 0 {
+//		fmtFeelsLikeTemp = fmt.Sprintf("%v +%v", prefix, feelsLikeTemp)
+//		return fmtFeelsLikeTemp
+//	}
+//	fmtFeelsLikeTemp = fmt.Sprintf("%v %v", prefix, feelsLikeTemp)
+//	return fmtFeelsLikeTemp
+//}
 func formatHumidity(data Stat) string {
 	/*Formats humidity into a string,
 	adding an emoji and a comment
@@ -143,7 +146,7 @@ func formatHumidity(data Stat) string {
 		comment = "Wet"
 	}
 	fmtHumidity = fmt.Sprintf(
-		"Humidity: %c %v (%v%%)\n", emoji, comment, math.Round(humidity),
+		"Humidity:\n%c %v (%v%%)", emoji, comment, math.Round(humidity),
 	)
 	return fmtHumidity
 }
@@ -162,33 +165,97 @@ func formatPressure(data Stat) string {
 		emoji = emojis["Up"]
 	}
 	fmtPressure = fmt.Sprintf(
-		"Pressure: %c %v mb (%v mmHg)\n", emoji, math.Round(pressure), millibarsToMmHg(math.Round(pressure)),
+		"Pressure:\n%c %v mb (%v mmHg)", emoji, math.Round(pressure), millibarsToMmHg(math.Round(pressure)),
 	)
 	return fmtPressure
 }
 func formatSun(data Stat) string {
 	/*Formats sun related data into a string
 	 */
-	fmtSun := fmt.Sprintln(
-		"Sunrise:", data.SunriseTime, "Sunset:", data.SunsetTime,
+	fmtSun := fmt.Sprintf(
+		"Sunrise: %v\nSunset: %v", data.SunriseTime, data.SunsetTime,
 	)
 	return fmtSun
 }
-func formatTemperature(data Stat) string {
-	/*Formats Temperature into a string,
+func formatTempAndFeels(data Stat) string {
+	/*Formats actual temperature together with apparent one into a string,
 	adding an emoji and a sign
-	NB: newline character is intentionally omitted
+	*/
+	fmtTempAndFeels := ""
+	temperature := data.Temperature
+	tempString := fmt.Sprint(temperature)
+	if temperature > 0 {
+		tempString = fmt.Sprintf("+%v", temperature)
+	}
+	feels := data.FeelsLikeTemp
+	feelsString := fmt.Sprint(feels)
+	if feels > 0 {
+		feelsString = fmt.Sprintf("+%v", feels)
+	}
+	fmtTempAndFeels = fmt.Sprintf(
+		"%c %v (%v) ", emojis["Thermometer"], tempString, feelsString,
+	)
+	return fmtTempAndFeels
+}
+func formatTempLowHigh(data Stat) string {
+	/*Formats mean low and mean high day temperature into a string,
+	adding emojis and signs
+	*/
+	fmtTempLowHigh := ""
+	tempLow := data.LowTemp
+	tempLowString := fmt.Sprint(tempLow)
+	if tempLow > 0 {
+		tempLowString = fmt.Sprintf("+%v", tempLow)
+	}
+	tempHigh := data.HighTemp
+	tempHighString := fmt.Sprint(tempHigh)
+	if tempHigh > 0 {
+		tempHighString = fmt.Sprintf("+%v", tempHigh)
+	}
+	fmtTempLowHigh = fmt.Sprintf(
+		"%c %v %c %v ", emojis["High"], tempHighString, emojis["Low"], tempLowString,
+	)
+	return fmtTempLowHigh
+}
+func formatTempSmall(data Stat) string {
+	/*Formats Temperature into a string,
+	adding a sign
 	*/
 	fmtTemperature := ""
 	temperature := data.Temperature
 	tempString := fmt.Sprint(temperature)
 	if temperature > 0 {
-		tempString = "+" + fmt.Sprint(temperature)
+		tempString = fmt.Sprintf("+%v", temperature)
 	}
 	fmtTemperature = fmt.Sprintf(
-		"%c %v ", emojis["Thermometer"], tempString,
+		"%v ", tempString,
 	)
 	return fmtTemperature
+}
+func formatDate(data Stat) string {
+	/*Formats date into a string
+	 */
+	fmtDate := ""
+	monthCode := data.DateTime[5:7]
+	month := months[monthCode]
+	date := data.DateTime[8:10]
+	if date[0] == '0' {
+		date = string(date[1])
+	}
+	fmtDate = fmt.Sprintf(
+		"%v %v:", date, month,
+	)
+	return fmtDate
+}
+func formatTime(data Stat) string {
+	/*Formats time into a string
+	 */
+	fmtTime := ""
+	time := data.DateTime[11:]
+	fmtTime = fmt.Sprintf(
+		"%vh ", time,
+	)
+	return fmtTime
 }
 func formatUv(data Stat) string {
 	/*Formats UV into a string,
@@ -203,26 +270,26 @@ func formatUv(data Stat) string {
 	switch {
 	case uv <= 2:
 		fmtUv = fmt.Sprintf(
-			"%v %v %v %v 1h+.\n", prefix, commentsEn["no"], commentsEn["hat"], commentsEn["sunburn"],
+			"%v\n%v %v", prefix, commentsEn["no"], commentsEn["hat"],
 		)
 	case uv > 2 && uv <= 5:
 		fmtUv = fmt.Sprintf(
-			"%v %v %v %v %v 40 min.\n", prefix, commentsEn["little"], commentsEn["hat"], commentsEn["spf15"],
+			"%v\n%v %v %v %v 40 min.", prefix, commentsEn["little"], commentsEn["hat"], commentsEn["spf15"],
 			commentsEn["sunburn"],
 		)
 	case uv > 5 && uv <= 7:
 		fmtUv = fmt.Sprintf(
-			"%v %v %v %v %v %v 30 min.\n", prefix, commentsEn["high"], commentsEn["hat"], commentsEn["spf30"],
+			"%v\n%v %v %v %v %v 30 min.", prefix, commentsEn["high"], commentsEn["hat"], commentsEn["spf30"],
 			commentsEn["cover"], commentsEn["sunburn"],
 		)
 	case uv > 7 && uv <= 10:
 		fmtUv = fmt.Sprintf(
-			"%v %v %v %v %v %v 20 min.\n", prefix, commentsEn["vhigh"], commentsEn["hat"], commentsEn["spf50"],
+			"%v\n%v %v %v %v %v 20 min.", prefix, commentsEn["vhigh"], commentsEn["hat"], commentsEn["spf50"],
 			commentsEn["cover"], commentsEn["sunburn"],
 		)
 	case uv > 10:
 		fmtUv = fmt.Sprintf(
-			"%v %v 20 min.\n", prefix, commentsEn["extreme"],
+			"%v\n%v 20 min.", prefix, commentsEn["extreme"],
 		)
 	}
 	return fmtUv
@@ -263,7 +330,7 @@ func formatWeatherCode(data Stat) string {
 		emoji = emojis["Comet"]
 	}
 	fmtWeatherCode = fmt.Sprintf(
-		"%c %v\n", emoji, data.Weather.Description,
+		"%c %v ", emoji, data.Weather.Description,
 	)
 	return fmtWeatherCode
 }
@@ -280,28 +347,72 @@ func formatWind(data Stat) string {
 		emoji = code
 	}
 	fmtWind = fmt.Sprintf(
-		"%c  Wind: %c %v %v m/sec\n", emojis["Wind"], emoji, direction, math.Round(speed),
+		"%c  Wind:\n%c %v %v m/sec", emojis["Wind"], emoji, direction, math.Round(speed),
 	)
 	return fmtWind
 }
 
-var lineFormatter = []func(data Stat) string{
-	formatCity,
-	formatTemperature, formatWeatherCode,
-	formatFeelsLikeTemp,
-	formatWind,
-	formatHumidity,
-	formatPressure,
-	formatSun,
-	formatUv,
-	formatAqi,
+var lineFormatterNow = []func(data Stat) string{
+	formatDate, AddNewLine,
+	formatTempAndFeels, AddNewLine,
+	formatWeatherCode, AddNewLine,
+	formatWind, AddNewLine,
+	formatHumidity, AddNewLine,
+	formatPressure, AddNewLine,
+	formatSun, AddNewLine,
+	formatUv, AddNewLine,
+	formatAqi, AddNewLine,
+}
+
+var lineFormatterHours = []func(data Stat) string{
+	formatTime, formatTempSmall, formatWeatherCode, AddNewLine,
+}
+
+var lineFormatterDays = []func(data Stat) string{
+	formatDate, AddNewLine,
+	formatTempLowHigh, formatWeatherCode, AddNewLine,
 }
 
 func (wr *FullWeatherReport) formatNow() string {
-	n := 0
+	day := 0
 	var res string
-	for _, formatter := range lineFormatter {
-		res += formatter(wr.Data[n])
+	res += formatCity(wr.Data[0].CityName)
+	for _, formatter := range lineFormatterNow {
+		res += formatter(wr.Data[day])
+	}
+	return res
+}
+
+func (wr *FullWeatherReport) formatHours(hours int) string {
+	var res string
+	res += formatCity(wr.CityName)
+	prevWeather := 0
+	prevDate := ""
+	currentDate := ""
+	for i := 0; i < hours; i++ {
+		if prevWeather == wr.Data[i].Code {
+			continue
+		}
+		currentDate = formatDate(wr.Data[i])
+		if prevDate != currentDate {
+			res += currentDate + "\n"
+		}
+		for _, formatter := range lineFormatterHours {
+			res += formatter(wr.Data[i])
+		}
+		prevWeather = wr.Data[i].Code
+		prevDate = currentDate
+	}
+	return res
+}
+
+func (wr *FullWeatherReport) formatDays(days int) string {
+	var res string
+	res += formatCity(wr.CityName)
+	for i := 0; i < days; i++ {
+		for _, formatter := range lineFormatterDays {
+			res += formatter(wr.Data[i])
+		}
 	}
 	return res
 }

@@ -13,8 +13,23 @@ var sayingsEn = []string{
 var forecasts = map[string]string{
 	"Now":     "current?",
 	"2 days":  "forecast/hourly?hours=48&",
-	"5 days":  "forecast/3hourly?",
+	"5 days":  "forecast/hourly?hours=120&",
 	"10 days": "forecast/daily?",
+}
+
+var months = map[string]string{
+	"01": "January",
+	"02": "February",
+	"03": "March",
+	"04": "April",
+	"05": "May",
+	"06": "June",
+	"07": "July",
+	"08": "August",
+	"09": "September",
+	"10": "October",
+	"11": "November",
+	"12": "December",
 }
 
 var emojis = map[string]int{
@@ -59,6 +74,8 @@ var emojis = map[string]int{
 	"Down":         128317,
 	"Dry":          129344,
 	"Wet":          128167,
+	"Low":          10549,
+	"High":         10548,
 }
 
 var commentsEn = map[string]string{

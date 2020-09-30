@@ -113,38 +113,64 @@ func main() {
 				msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
 				bot.Send(msg)
 			}
-		case "2 days", "5 days", "10 days":
+		case "2 days":
 			{
-				text := "Under development"
-				msg := tgbotapi.NewMessage(chatID, text)
+				forecast, err := getForecast(loc, text, cfg)
+				if err != nil {
+					err = es.Wrap(err, "failed to getForecast:")
+					fmt.Println(err)
+				}
+				wr, err := parseWeather(forecast)
+				if err != nil {
+					err = es.Wrap(err, "failed to parseWeather:")
+					fmt.Println(err)
+				}
+				repr := wr.formatHours(48)
+				msg := tgbotapi.NewMessage(chatID, repr)
 				msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
 				bot.Send(msg)
 			}
-			// case "2 days":
-			// 	{
-			// 		forecast, err := getForecast(loc, text)
-			// 		if err != nil {
-			// 			err = es.Wrap(err, "failed to getForecast:")
-			// 			fmt.Println(err)
-			// 		}
-			// 		wr, err := parseWeather(forecast)
-			// 		if err != nil {
-			// 			err = es.Wrap(err, "failed to parseWeather:")
-			// 			fmt.Println(err)
-			// 		}
-			// 		repr := wr.formatForecast()
-			// 		msg := tgbotapi.NewMessage(chatID, repr)
-			// 		msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
-			// 		bot.Send(msg)
-			// 	}
-			// case "5 days":
-			// case "10 days":
-
-			// default:
-			// 	{
-			// 		msg := tgbotapi.NewMessage(chatID, DefaultMessage)
-			// 		bot.Send(msg)
-			// 	}
+		case "5 days":
+			{
+				forecast, err := getForecast(loc, text, cfg)
+				if err != nil {
+					err = es.Wrap(err, "failed to getForecast:")
+					fmt.Println(err)
+				}
+				wr, err := parseWeather(forecast)
+				if err != nil {
+					err = es.Wrap(err, "failed to parseWeather:")
+					fmt.Println(err)
+				}
+				repr := wr.formatHours(120)
+				msg := tgbotapi.NewMessage(chatID, repr)
+				msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
+				bot.Send(msg)
+			}
+		case "10 days":
+			{
+				forecast, err := getForecast(loc, text, cfg)
+				if err != nil {
+					err = es.Wrap(err, "failed to getForecast:")
+					fmt.Println(err)
+				}
+				wr, err := parseWeather(forecast)
+				if err != nil {
+					err = es.Wrap(err, "failed to parseWeather:")
+					fmt.Println(err)
+				}
+				repr := wr.formatDays(10)
+				msg := tgbotapi.NewMessage(chatID, repr)
+				msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
+				bot.Send(msg)
+			}
+			//case "10 days":
+			//		{
+			//			text := "Under development"
+			//			msg := tgbotapi.NewMessage(chatID, text)
+			//			msg.ReplyMarkup = tgbotapi.NewReplyKeyboard(forecastMenu)
+			//			bot.Send(msg)
+			//		}
 		}
 	}
 }
