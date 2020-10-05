@@ -20,6 +20,7 @@ type config struct {
 	WebhookURL string `env:"WEBHOOK"`
 	WeatherAPI string `env:"WEATHER_API"`
 	Language   string `env:"LANGUAGE"`
+	DbUrl      string `env:"DATABASE_URL"`
 }
 
 func parseConfig() config {
@@ -73,7 +74,6 @@ func formatCity(city string) string {
 	)
 	return fmtCity
 }
-
 func AddNewLine(data Stat) string {
 	/*Adds a new line
 	 */
@@ -448,8 +448,9 @@ func getForecast(loc *tgbotapi.Location, period string, cfg config) ([]byte, err
 }
 
 func parseWeather(weather []byte) (FullWeatherReport, error) {
-	/*
-	 */
+	/*Parses JSON into FullWeatherReport,
+	which then can be used to retrieve weather information
+	*/
 	data := FullWeatherReport{}
 	err := json.Unmarshal(weather, &data)
 	if err != nil {
