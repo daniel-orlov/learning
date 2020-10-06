@@ -24,11 +24,12 @@ type config struct {
 }
 
 func parseConfig() config {
+	fmt.Println("EXECUTING: parseConfig")
 	cfg := config{}
 	if err := env.Parse(&cfg); err != nil {
 		fmt.Printf("%+v\n", err)
 	}
-	fmt.Printf("%+v\n", cfg)
+	//fmt.Printf("%+v\n", cfg)
 	return cfg
 }
 
@@ -289,7 +290,7 @@ func formatUv(data Stat) string {
 		)
 	case uv > 10:
 		fmtUv = fmt.Sprintf(
-			"%v\n%v 20 min.", prefix, commentsEn["extreme"],
+			"%v\n%v %v 20 min.", prefix, commentsEn["extreme"], commentsEn["sunburn"],
 		)
 	}
 	return fmtUv
@@ -374,6 +375,7 @@ var lineFormatterDays = []func(data Stat) string{
 }
 
 func (wr *FullWeatherReport) formatNow() string {
+	fmt.Println("EXECUTING: formatNow")
 	day := 0
 	var res string
 	res += formatCity(wr.Data[0].CityName)
@@ -384,6 +386,7 @@ func (wr *FullWeatherReport) formatNow() string {
 }
 
 func (wr *FullWeatherReport) formatHours(hours int) string {
+	fmt.Println("EXECUTING: formatHours")
 	var res string
 	res += formatCity(wr.CityName)
 	prevWeather := 0
@@ -407,6 +410,7 @@ func (wr *FullWeatherReport) formatHours(hours int) string {
 }
 
 func (wr *FullWeatherReport) formatDays(days int) string {
+	fmt.Println("EXECUTING: formatDays")
 	var res string
 	res += formatCity(wr.CityName)
 	for i := 0; i < days; i++ {
@@ -417,9 +421,11 @@ func (wr *FullWeatherReport) formatDays(days int) string {
 	return res
 }
 
-func getForecast(loc *tgbotapi.Location, period string, cfg config) ([]byte, error) {
+func getForecast(loc *tgbotapi.Location, period string) ([]byte, error) {
 	/*
 	 */
+	fmt.Println("EXECUTING: getForecast")
+	cfg := parseConfig()
 	lat := fmt.Sprint(loc.Latitude)
 	long := fmt.Sprint(loc.Longitude)
 	baseWeatherURL := "https://weatherbit-v1-mashape.p.rapidapi.com/"
@@ -451,6 +457,7 @@ func parseWeather(weather []byte) (FullWeatherReport, error) {
 	/*Parses JSON into FullWeatherReport,
 	which then can be used to retrieve weather information
 	*/
+	fmt.Println("EXECUTING: parseWeather")
 	data := FullWeatherReport{}
 	err := json.Unmarshal(weather, &data)
 	if err != nil {
