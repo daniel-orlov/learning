@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/caarlos0/env"
 	"github.com/jackc/pgx/v4"
 	es "github.com/pkg/errors"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
@@ -22,6 +23,27 @@ func NewUserMessage(bot *tgbotapi.BotAPI, conn *pgx.Conn, update *tgbotapi.Updat
 		update:     update,
 	}
 	return userMsg
+}
+
+//envDefault:"./.env"
+
+type config struct {
+	BotToken   string `env:"BOT_TOKEN"`
+	Port       string `env:"PORT"`
+	WebhookURL string `env:"WEBHOOK"`
+	WeatherAPI string `env:"WEATHER_API"`
+	Language   string `env:"LANGUAGE"`
+	DbUrl      string `env:"DATABASE_URL"`
+}
+
+func parseConfig() config {
+	fmt.Println("EXECUTING: parseConfig")
+	cfg := config{}
+	if err := env.Parse(&cfg); err != nil {
+		fmt.Printf("%+v\n", err)
+	}
+	//fmt.Printf("%+v\n", cfg)
+	return cfg
 }
 
 var locationKeyboard = tgbotapi.NewReplyKeyboard(
@@ -93,7 +115,7 @@ func handleStop(um *UserMessage) {
 }
 func handleStart(um *UserMessage) {
 	fmt.Println("EXECUTING: handleStart")
-	go addUserIfNotExists(um.connection, um.update)
+	addUserIfNotExists(um.connection, um.update)
 	greeting := commentsEn["DefaultMessage"] + "\n" + pickASaying(sayingsEn)
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, greeting)
 	msg.ReplyMarkup = keyboards["main"]
@@ -244,10 +266,31 @@ func handleEmpty(um *UserMessage) {
 	}
 }
 
-//DATABASE FUNCTIONS
+var handlersEn = map[string]func(um *UserMessage){
+	"/stop":                  handleStop,
+	"/start":                 handleStart,
+	"":                       handleEmpty,
+	"Weather at my location": handleLocationByCoords,
+	"Weather elsewhere":      handleWeatherElsewhere,
+	"< Back":                 handleBackToMainMenu,
+	"<< Back":                handleBack,
+	"By Days":                handleByDays,
+	"By Hours":               handleByHours,
+	"Now":                    handleNow,
+	"3 days":                 handleDays,
+	"5 days":                 handleDays,
+	"7 days":                 handleDays,
+	"10 days":                handleDays,
+	"16 days":                handleDays,
+	"24 hours":               handleHours,
+	"48 hours":               handleHours,
+	"72 hours":               handleHours,
+	"96 hours":               handleHours,
+	"120 hours":              handleHours,
+}
+
+//DATABASE CALLS
 func addUserIfNotExists(conn *pgx.Conn, update *tgbotapi.Update) {
-	/* TESTED, IT WORKS AS EXPECTED
-	 */
 	fmt.Println("EXECUTING: addUserIfNotExists")
 	username := update.Message.From.UserName
 	userId := fmt.Sprintf("%v", update.Message.From.ID)
@@ -267,9 +310,8 @@ func addUserIfNotExists(conn *pgx.Conn, update *tgbotapi.Update) {
 		fmt.Println(err)
 	}
 }
+
 func addLocationByCoords(conn *pgx.Conn, msg *tgbotapi.Message) {
-	/* TESTED, IT WORKS AS EXPECTED
-	 */
 	fmt.Println("EXECUTING: addLocationByCoords")
 	userId := msg.From.ID
 	lat := fmt.Sprintf("%v", msg.Location.Latitude)
@@ -289,9 +331,9 @@ func addLocationByCoords(conn *pgx.Conn, msg *tgbotapi.Message) {
 		fmt.Println(err)
 	}
 }
+
 func nameMostRecentLocation(name string, conn *pgx.Conn, userId int) {
-	/* TESTED, IT WORKS AS EXPECTED
-	 */
+
 	fmt.Println("EXECUTING: nameMostRecentLocation")
 	loc, id := getMostRecentLocation(conn, userId)
 	sqlQuery := fmt.Sprintf(
@@ -378,25 +420,43 @@ func retrieveCoordinates(conn *pgx.Conn, location string) tgbotapi.Location {
 	return loc
 }
 
-var handlersEn = map[string]func(um *UserMessage){
-	"/stop":                  handleStop,
-	"/start":                 handleStart,
-	"":                       handleEmpty,
-	"Weather at my location": handleLocationByCoords,
-	"Weather elsewhere":      handleWeatherElsewhere,
-	"< Back":                 handleBackToMainMenu,
-	"<< Back":                handleBack,
-	"By Days":                handleByDays,
-	"By Hours":               handleByHours,
-	"Now":                    handleNow,
-	"3 days":                 handleDays,
-	"5 days":                 handleDays,
-	"7 days":                 handleDays,
-	"10 days":                handleDays,
-	"16 days":                handleDays,
-	"24 hours":               handleHours,
-	"48 hours":               handleHours,
-	"72 hours":               handleHours,
-	"96 hours":               handleHours,
-	"120 hours":              handleHours,
+func fetchEmojis(backup map[string]int) map[string]int {
+	fmt.Println("EXECUTING: fetchEmojis")
+	cfg := parseConfig()
+	//establishing connection to database
+	conn, err := pgx.Connect(context.Background(), cfg.DbUrl)
+	if err != nil {
+		err = es.Wrap(err, "Unable to connect to database")
+		fmt.Println(err)
+	}
+	defer conn.Close(context.Background())
+
+	var emojis = make(map[string]int)
+	sqlQuery := `SELECT name, code FROM emojis`
+	fmt.Println(sqlQuery)
+	rows, err := conn.Query(context.Background(), sqlQuery)
+	if err != nil {
+		err = es.Wrap(err, "FAILED: Query when fetching Emojis")
+		fmt.Println(err)
+	}
+
+	var name string
+	var code int
+	for rows.Next() {
+		err = rows.Scan(&name, &code)
+		if err != nil {
+			err = es.Wrap(err, "FAILED: Scanning a Row while fetching Emojis")
+			fmt.Println(err)
+		}
+		emojis[name] = code
+	}
+	err = rows.Err()
+	if err != nil {
+		err = es.Wrap(err, "FAILED: Scan/Next a Row while fetching Emojis")
+		fmt.Println(err)
+	}
+	if len(emojis) == 0 {
+		return backup
+	}
+	return emojis
 }

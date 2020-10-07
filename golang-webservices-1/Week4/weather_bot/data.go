@@ -39,7 +39,7 @@ var months = map[string]string{
 	"12": "December",
 }
 
-var emojis = map[string]int{
+var emojisBackUp = map[string]int{
 	"Wind":         127788,
 	"Thermometer":  127777,
 	"Comet":        9732,
@@ -84,6 +84,9 @@ var emojis = map[string]int{
 	"Low":          10549,
 	"High":         10548,
 }
+
+//fetching emojis from db
+var emojis = fetchEmojis(emojisBackUp)
 
 var commentsEn = map[string]string{
 	"no":                "👒 No danger to the average person.",

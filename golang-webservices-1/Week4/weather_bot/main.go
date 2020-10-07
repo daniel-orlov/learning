@@ -13,9 +13,6 @@ func main() {
 	//parsing config from .env
 	var cfg = parseConfig()
 
-	//fetching emojis from db
-	//TODO
-
 	//establishing connection to database
 	conn, err := pgx.Connect(context.Background(), cfg.DbUrl)
 	if err != nil {
@@ -41,7 +38,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	//registers an http handler for a webhook, returns UpdatesChannel (<-chan Update)
+	//registering an http handler for a webhook, returns UpdatesChannel (<-chan Update)
 	updates := bot.ListenForWebhook("/")
 
 	//launching a server on a local host :8080

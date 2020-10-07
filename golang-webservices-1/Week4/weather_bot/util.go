@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/caarlos0/env"
 	es "github.com/pkg/errors"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
 	"io/ioutil"
@@ -11,27 +10,6 @@ import (
 	"math/rand"
 	"net/http"
 )
-
-//envDefault:"./.env"
-
-type config struct {
-	BotToken   string `env:"BOT_TOKEN"`
-	Port       string `env:"PORT"`
-	WebhookURL string `env:"WEBHOOK"`
-	WeatherAPI string `env:"WEATHER_API"`
-	Language   string `env:"LANGUAGE"`
-	DbUrl      string `env:"DATABASE_URL"`
-}
-
-func parseConfig() config {
-	fmt.Println("EXECUTING: parseConfig")
-	cfg := config{}
-	if err := env.Parse(&cfg); err != nil {
-		fmt.Printf("%+v\n", err)
-	}
-	//fmt.Printf("%+v\n", cfg)
-	return cfg
-}
 
 type FullWeatherReport struct {
 	Data     []Stat `json:"data"`
@@ -42,7 +20,7 @@ type FullWeatherReport struct {
 type Stat struct {
 	RelativeHumidity float64 `json:"rh"`
 	PartOfDay        string  `json:"pod"`
-	PressureMb       float64 `json:"pres"` //pressure in mbar
+	PressureMb       float64 `json:"pres"` //pressure in millibar
 	CloudCoverage    int     `json:"clouds"`
 	CityName         string  `json:"city_name"`
 	DateTime         string  `json:"datetime"`
@@ -449,7 +427,7 @@ func getForecast(loc *tgbotapi.Location, period string) ([]byte, error) {
 		err = es.Wrap(err, "failed to read from response body")
 		return nil, err
 	}
-	fmt.Printf("BODY: %v\n\n", string(body))
+	fmt.Println("BODY:", string(body))
 	return body, nil
 }
 
