@@ -9,12 +9,33 @@ import (
 	"strconv"
 )
 
+type UserMessage struct {
+	bot        *tgbotapi.BotAPI
+	connection *pgx.Conn
+	update     *tgbotapi.Update
+}
+
+func NewUserMessage(bot *tgbotapi.BotAPI, conn *pgx.Conn, update *tgbotapi.Update) UserMessage {
+	userMsg := UserMessage{
+		bot:        bot,
+		connection: conn,
+		update:     update,
+	}
+	return userMsg
+}
+
 var locationKeyboard = tgbotapi.NewReplyKeyboard(
 	tgbotapi.NewKeyboardButtonRow(
 		tgbotapi.NewKeyboardButtonLocation(commentsEn["AtMyLocation"]),
 	),
 	tgbotapi.NewKeyboardButtonRow(
 		tgbotapi.NewKeyboardButton(commentsEn["AtADiffPlace"]),
+	),
+)
+
+var backToMainMenuKeyboard = tgbotapi.NewReplyKeyboard(
+	tgbotapi.NewKeyboardButtonRow(
+		tgbotapi.NewKeyboardButton(commentsEn["Back0"]),
 	),
 )
 
@@ -60,55 +81,55 @@ var keyboards = map[string]tgbotapi.ReplyKeyboardMarkup{
 	"period": daysOrHoursKeyboard,
 	"days":   daysKeyboard,
 	"hours":  hoursKeyboard,
+	"back":   backToMainMenuKeyboard,
 }
 
-//HANDLERS, FUTURE MAP[STRING]FUNC
-func handleStop(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
+//HANDLERS
+func handleStop(um *UserMessage) {
 	fmt.Println("EXECUTING: handleStop")
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, commentsEn["Stop"])
+	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["End"])
 	msg.ReplyMarkup = tgbotapi.ReplyKeyboardHide{HideKeyboard: true}
-	bot.Send(msg)
-	bot.StopReceivingUpdates() //should turn the bot off
+	um.bot.Send(msg)
 }
-func handleStart(bot *tgbotapi.BotAPI, conn *pgx.Conn, update tgbotapi.Update) {
+func handleStart(um *UserMessage) {
 	fmt.Println("EXECUTING: handleStart")
-	go addUserIfNotExists(conn, update)
+	go addUserIfNotExists(um.connection, um.update)
 	greeting := commentsEn["DefaultMessage"] + "\n" + pickASaying(sayingsEn)
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, greeting)
+	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, greeting)
 	msg.ReplyMarkup = keyboards["main"]
-	bot.Send(msg)
+	um.bot.Send(msg)
 }
-func handleBackToMainMenu(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
+func handleBackToMainMenu(um *UserMessage) {
 	fmt.Println("EXECUTING: handleBackToMainMenu")
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, commentsEn["ChooseLocation"])
+	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["ChooseLocation"])
 	msg.ReplyMarkup = keyboards["main"]
-	bot.Send(msg)
+	um.bot.Send(msg)
 }
-func handleBack(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
+func handleBack(um *UserMessage) {
 	fmt.Println("EXECUTING: handleBack")
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, commentsEn["ChoosePeriodType"])
+	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["ChoosePeriodType"])
 	msg.ReplyMarkup = keyboards["period"]
-	bot.Send(msg)
+	um.bot.Send(msg)
 }
-func handleByDays(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
+func handleByDays(um *UserMessage) {
 	fmt.Println("EXECUTING: handleByDays")
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, commentsEn["ChoosePeriod"])
+	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["ChoosePeriod"])
 	msg.ReplyMarkup = keyboards["days"]
-	bot.Send(msg)
+	um.bot.Send(msg)
 }
-func handleByHours(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
+func handleByHours(um *UserMessage) {
 	fmt.Println("EXECUTING: handleByHours")
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, commentsEn["ChoosePeriod"])
+	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["ChoosePeriod"])
 	msg.ReplyMarkup = keyboards["hours"]
-	bot.Send(msg)
+	um.bot.Send(msg)
 }
-func handleNow(bot *tgbotapi.BotAPI, conn *pgx.Conn, update tgbotapi.Update) {
+func handleNow(um *UserMessage) {
 	fmt.Println("EXECUTING: handleNow")
-	text := update.Message.Text
-	userId := update.Message.From.ID
-	chatId := update.Message.Chat.ID
+	text := um.update.Message.Text
+	userId := um.update.Message.From.ID
+	chatId := um.update.Message.Chat.ID
 
-	loc, _ := getMostRecentLocation(conn, userId)
+	loc, _ := getMostRecentLocation(um.connection, userId)
 	forecast, err := getForecast(&loc, text)
 	if err != nil {
 		err = es.Wrap(err, "failed to getForecast")
@@ -121,21 +142,21 @@ func handleNow(bot *tgbotapi.BotAPI, conn *pgx.Conn, update tgbotapi.Update) {
 		fmt.Println(err)
 	}
 
-	nameMostRecentLocation(wr.Data[0].CityName, conn, userId)
+	nameMostRecentLocation(wr.Data[0].CityName, um.connection, userId)
 	repr := wr.formatNow()
 
 	msg := tgbotapi.NewMessage(chatId, repr)
 	msg.ReplyMarkup = keyboards["period"]
-	bot.Send(msg)
+	um.bot.Send(msg)
 }
-func handleHours(bot *tgbotapi.BotAPI, conn *pgx.Conn, update tgbotapi.Update) {
+func handleHours(um *UserMessage) {
 	fmt.Println("EXECUTING: handleHours")
-	text := update.Message.Text
+	text := um.update.Message.Text
 	timePeriod := timePeriodsEn[text]
-	userId := update.Message.From.ID
-	chatId := update.Message.Chat.ID
+	userId := um.update.Message.From.ID
+	chatId := um.update.Message.Chat.ID
 
-	loc, _ := getMostRecentLocation(conn, userId)
+	loc, _ := getMostRecentLocation(um.connection, userId)
 	forecast, err := getForecast(&loc, text)
 	if err != nil {
 		err = es.Wrap(err, "failed to getForecast")
@@ -148,21 +169,21 @@ func handleHours(bot *tgbotapi.BotAPI, conn *pgx.Conn, update tgbotapi.Update) {
 		fmt.Println(err)
 	}
 
-	nameMostRecentLocation(wr.CityName, conn, userId)
+	nameMostRecentLocation(wr.CityName, um.connection, userId)
 	repr := wr.formatHours(timePeriod)
 
 	msg := tgbotapi.NewMessage(chatId, repr)
 	msg.ReplyMarkup = keyboards["hours"]
-	bot.Send(msg)
+	um.bot.Send(msg)
 }
-func handleDays(bot *tgbotapi.BotAPI, conn *pgx.Conn, update tgbotapi.Update) {
+func handleDays(um *UserMessage) {
 	fmt.Println("EXECUTING: handleDays")
-	text := update.Message.Text
+	text := um.update.Message.Text
 	timePeriod := timePeriodsEn[text]
-	userId := update.Message.From.ID
-	chatId := update.Message.Chat.ID
+	userId := um.update.Message.From.ID
+	chatId := um.update.Message.Chat.ID
 
-	loc, _ := getMostRecentLocation(conn, userId)
+	loc, _ := getMostRecentLocation(um.connection, userId)
 	forecast, err := getForecast(&loc, text)
 	if err != nil {
 		err = es.Wrap(err, "failed to getForecast")
@@ -175,36 +196,56 @@ func handleDays(bot *tgbotapi.BotAPI, conn *pgx.Conn, update tgbotapi.Update) {
 		fmt.Println(err)
 	}
 
-	nameMostRecentLocation(wr.CityName, conn, userId)
+	nameMostRecentLocation(wr.CityName, um.connection, userId)
 	repr := wr.formatDays(timePeriod)
 
 	msg := tgbotapi.NewMessage(chatId, repr)
 	msg.ReplyMarkup = keyboards["days"]
-	bot.Send(msg)
+	um.bot.Send(msg)
 }
-func handleLocationByCoords(bot *tgbotapi.BotAPI, conn *pgx.Conn, update tgbotapi.Update) {
+func handleLocationByCoords(um *UserMessage) {
 	fmt.Println("EXECUTING: handleLocationByCoords")
-	addLocationByCoords(conn, update.Message)
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, commentsEn["CoordsAccepted"])
+	addLocationByCoords(um.connection, um.update.Message)
+	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["CoordsAccepted"])
 	msg.ReplyMarkup = keyboards["period"]
-	bot.Send(msg)
+	um.bot.Send(msg)
 }
-func handleLocationByText(bot *tgbotapi.BotAPI, conn *pgx.Conn, update tgbotapi.Update) {
+func handleWeatherElsewhere(um *UserMessage) {
+	fmt.Println("EXECUTING: handleWeatherElsewhere")
+	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["DiffPlaceAccepted"])
+	msg.ReplyMarkup = tgbotapi.ReplyKeyboardHide{HideKeyboard: true}
+	um.bot.Send(msg)
+}
+func handleLocationByText(um *UserMessage) {
 	fmt.Println("EXECUTING: handleLocationByText")
-	addLocationByCoords(conn, update.Message)
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, commentsEn["CoordsAccepted"])
-	msg.ReplyMarkup = keyboards["period"]
-	bot.Send(msg)
+	loc := retrieveCoordinates(um.connection, um.update.Message.Text)
+	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["TryAgain"])
+	msg.ReplyMarkup = keyboards["back"]
+	if loc.Longitude != 0 && loc.Latitude != 0 {
+		um.update.Message.Location = &loc
+		addLocationByCoords(um.connection, um.update.Message)
+		msg = tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["CoordsAccepted"])
+		msg.ReplyMarkup = keyboards["period"]
+	}
+	um.bot.Send(msg)
 }
-func handleUnknown(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
+func handleUnknown(um *UserMessage) {
 	fmt.Println("EXECUTING: handleUnknown")
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, commentsEn["Unknown"])
+	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["Unknown"])
 	msg.ReplyMarkup = keyboards["main"]
-	bot.Send(msg)
+	um.bot.Send(msg)
+}
+func handleEmpty(um *UserMessage) {
+	fmt.Println("EXECUTING: handleEmpty")
+	if um.update.Message.Location != nil {
+		handleLocationByCoords(um)
+	} else {
+		handleUnknown(um)
+	}
 }
 
 //DATABASE FUNCTIONS
-func addUserIfNotExists(conn *pgx.Conn, update tgbotapi.Update) {
+func addUserIfNotExists(conn *pgx.Conn, update *tgbotapi.Update) {
 	/* TESTED, IT WORKS AS EXPECTED
 	 */
 	fmt.Println("EXECUTING: addUserIfNotExists")
@@ -249,6 +290,8 @@ func addLocationByCoords(conn *pgx.Conn, msg *tgbotapi.Message) {
 	}
 }
 func nameMostRecentLocation(name string, conn *pgx.Conn, userId int) {
+	/* TESTED, IT WORKS AS EXPECTED
+	 */
 	fmt.Println("EXECUTING: nameMostRecentLocation")
 	loc, id := getMostRecentLocation(conn, userId)
 	sqlQuery := fmt.Sprintf(
@@ -302,4 +345,58 @@ func getMostRecentLocation(conn *pgx.Conn, userId int) (tgbotapi.Location, int) 
 		fmt.Println(err)
 	}
 	return loc, id
+}
+
+func retrieveCoordinates(conn *pgx.Conn, location string) tgbotapi.Location {
+	fmt.Println("EXECUTING: retrieveCoordinates")
+	loc := tgbotapi.Location{}
+	sqlQuery := fmt.Sprintf(
+		`SELECT latitude, longitude 
+				FROM places
+				WHERE city = '%v'
+				`,
+		location,
+	)
+	fmt.Println(sqlQuery)
+	var lat, long string
+	err := conn.QueryRow(context.Background(), sqlQuery).Scan(&lat, &long)
+	if err != nil {
+		err = es.Wrap(err, "FAILED: QueryRow when retrieving Coordinates")
+		fmt.Println(err)
+	}
+	fmt.Println("LONG", long, "LAT", lat)
+	loc.Latitude, err = strconv.ParseFloat(lat, 64)
+	if err != nil {
+		err = es.Wrap(err, "Latitude parsing failed")
+		fmt.Println(err)
+	}
+	loc.Longitude, err = strconv.ParseFloat(long, 64)
+	if err != nil {
+		err = es.Wrap(err, "Longitude parsing failed")
+		fmt.Println(err)
+	}
+	return loc
+}
+
+var handlersEn = map[string]func(um *UserMessage){
+	"/stop":                  handleStop,
+	"/start":                 handleStart,
+	"":                       handleEmpty,
+	"Weather at my location": handleLocationByCoords,
+	"Weather elsewhere":      handleWeatherElsewhere,
+	"< Back":                 handleBackToMainMenu,
+	"<< Back":                handleBack,
+	"By Days":                handleByDays,
+	"By Hours":               handleByHours,
+	"Now":                    handleNow,
+	"3 days":                 handleDays,
+	"5 days":                 handleDays,
+	"7 days":                 handleDays,
+	"10 days":                handleDays,
+	"16 days":                handleDays,
+	"24 hours":               handleHours,
+	"48 hours":               handleHours,
+	"72 hours":               handleHours,
+	"96 hours":               handleHours,
+	"120 hours":              handleHours,
 }
