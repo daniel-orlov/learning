@@ -111,7 +111,11 @@ func handleStop(um *UserMessage) {
 	fmt.Println("EXECUTING: handleStop")
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["End"])
 	msg.ReplyMarkup = tgbotapi.ReplyKeyboardHide{HideKeyboard: true}
-	um.bot.Send(msg)
+	_, err := um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleStart(um *UserMessage) {
 	fmt.Println("EXECUTING: handleStart")
@@ -119,31 +123,51 @@ func handleStart(um *UserMessage) {
 	greeting := commentsEn["DefaultMessage"] + "\n" + pickASaying(sayingsEn)
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, greeting)
 	msg.ReplyMarkup = keyboards["main"]
-	um.bot.Send(msg)
+	_, err := um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleBackToMainMenu(um *UserMessage) {
 	fmt.Println("EXECUTING: handleBackToMainMenu")
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["ChooseLocation"])
 	msg.ReplyMarkup = keyboards["main"]
-	um.bot.Send(msg)
+	_, err := um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleBack(um *UserMessage) {
 	fmt.Println("EXECUTING: handleBack")
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["ChoosePeriodType"])
 	msg.ReplyMarkup = keyboards["period"]
-	um.bot.Send(msg)
+	_, err := um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleByDays(um *UserMessage) {
 	fmt.Println("EXECUTING: handleByDays")
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["ChoosePeriod"])
 	msg.ReplyMarkup = keyboards["days"]
-	um.bot.Send(msg)
+	_, err := um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleByHours(um *UserMessage) {
 	fmt.Println("EXECUTING: handleByHours")
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["ChoosePeriod"])
 	msg.ReplyMarkup = keyboards["hours"]
-	um.bot.Send(msg)
+	_, err := um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleNow(um *UserMessage) {
 	fmt.Println("EXECUTING: handleNow")
@@ -169,7 +193,11 @@ func handleNow(um *UserMessage) {
 
 	msg := tgbotapi.NewMessage(chatId, repr)
 	msg.ReplyMarkup = keyboards["period"]
-	um.bot.Send(msg)
+	_, err = um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleHours(um *UserMessage) {
 	fmt.Println("EXECUTING: handleHours")
@@ -196,7 +224,11 @@ func handleHours(um *UserMessage) {
 
 	msg := tgbotapi.NewMessage(chatId, repr)
 	msg.ReplyMarkup = keyboards["hours"]
-	um.bot.Send(msg)
+	_, err = um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleDays(um *UserMessage) {
 	fmt.Println("EXECUTING: handleDays")
@@ -223,39 +255,59 @@ func handleDays(um *UserMessage) {
 
 	msg := tgbotapi.NewMessage(chatId, repr)
 	msg.ReplyMarkup = keyboards["days"]
-	um.bot.Send(msg)
+	_, err = um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleLocationByCoords(um *UserMessage) {
 	fmt.Println("EXECUTING: handleLocationByCoords")
 	addLocationByCoords(um.connection, um.update.Message)
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["CoordsAccepted"])
 	msg.ReplyMarkup = keyboards["period"]
-	um.bot.Send(msg)
+	_, err := um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleWeatherElsewhere(um *UserMessage) {
 	fmt.Println("EXECUTING: handleWeatherElsewhere")
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["DiffPlaceAccepted"])
 	msg.ReplyMarkup = tgbotapi.ReplyKeyboardHide{HideKeyboard: true}
-	um.bot.Send(msg)
+	_, err := um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleLocationByText(um *UserMessage) {
 	fmt.Println("EXECUTING: handleLocationByText")
 	loc := retrieveCoordinates(um.connection, um.update.Message.Text)
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["TryAgain"])
 	msg.ReplyMarkup = keyboards["back"]
-	if loc.Longitude != 0 && loc.Latitude != 0 {
+	if loc.Longitude != 0 && loc.Latitude != 0 { //this one makes it impossible to use bot from one place in Ghana
 		um.update.Message.Location = &loc
 		addLocationByCoords(um.connection, um.update.Message)
 		msg = tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["CoordsAccepted"])
 		msg.ReplyMarkup = keyboards["period"]
 	}
-	um.bot.Send(msg)
+	_, err := um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleUnknown(um *UserMessage) {
 	fmt.Println("EXECUTING: handleUnknown")
 	msg := tgbotapi.NewMessage(um.update.Message.Chat.ID, commentsEn["Unknown"])
 	msg.ReplyMarkup = keyboards["main"]
-	um.bot.Send(msg)
+	_, err := um.bot.Send(msg)
+	if err != nil {
+		err = es.Wrap(err, "Unable to Send message")
+		fmt.Println(err)
+	}
 }
 func handleEmpty(um *UserMessage) {
 	fmt.Println("EXECUTING: handleEmpty")
@@ -303,7 +355,7 @@ func addUserIfNotExists(conn *pgx.Conn, update *tgbotapi.Update) {
 		userId, username, language,
 	)
 	err := conn.QueryRow(context.Background(), sqlQuery).Scan()
-	if err.Error() == "no rows in result set" {
+	if err.Error() == "no rows in result set" { //I have doubts about this one. Not sure if this is right
 		fmt.Println("SUCCEEDED: QueryRow when adding UserIfNotExists")
 	} else if err != nil {
 		err = es.Wrap(err, "FAILED: QueryRow when adding UserIfNotExists")
@@ -324,7 +376,7 @@ func addLocationByCoords(conn *pgx.Conn, msg *tgbotapi.Message) {
 		userId, lat, long,
 	)
 	err := conn.QueryRow(context.Background(), sqlQuery).Scan()
-	if err.Error() == "no rows in result set" {
+	if err.Error() == "no rows in result set" { //I have doubts about this one. Not sure if this is right
 		fmt.Println("SUCCEEDED: QueryRow when adding LocationByCoords")
 	} else if err != nil {
 		err = es.Wrap(err, "FAILED: QueryRow when adding LocationByCoords")
@@ -346,7 +398,7 @@ func nameMostRecentLocation(name string, conn *pgx.Conn, userId int) {
 	)
 	fmt.Println(sqlQuery)
 	err := conn.QueryRow(context.Background(), sqlQuery).Scan()
-	if err.Error() == "no rows in result set" {
+	if err.Error() == "no rows in result set" { //I have doubts about this one. Not sure if this is right
 		fmt.Println("SUCCEEDED: QueryRow when naming MostRecentLocation")
 	} else if err != nil {
 		err = es.Wrap(err, "FAILED: QueryRow when naming MostRecentLocation")

@@ -24,7 +24,7 @@ var forecasts = map[string]string{
 	"120 hours": "forecast/hourly?hours=120&",
 }
 
-var months = map[string]string{
+var monthsEn = map[string]string{
 	"01": "January",
 	"02": "February",
 	"03": "March",

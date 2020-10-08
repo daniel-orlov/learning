@@ -216,7 +216,7 @@ func formatDate(data Stat) string {
 	 */
 	fmtDate := ""
 	monthCode := data.DateTime[5:7]
-	month := months[monthCode]
+	month := monthsEn[monthCode]
 	date := data.DateTime[8:10]
 	if date[0] == '0' {
 		date = string(date[1])
