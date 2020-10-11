@@ -93,21 +93,6 @@ func formatAqi(data Stat) string {
 	)
 	return fmtAqi
 }
-
-//func formatFeelsLikeTemp(data Stat) string {
-//	/*Formats FeelsLike Temperature into a string,
-//	adding a sign
-//	*/
-//	fmtFeelsLikeTemp := ""
-//	prefix := "Feels like"
-//	feelsLikeTemp := data.FeelsLikeTemp
-//	if feelsLikeTemp > 0 {
-//		fmtFeelsLikeTemp = fmt.Sprintf("%v +%v", prefix, feelsLikeTemp)
-//		return fmtFeelsLikeTemp
-//	}
-//	fmtFeelsLikeTemp = fmt.Sprintf("%v %v", prefix, feelsLikeTemp)
-//	return fmtFeelsLikeTemp
-//}
 func formatHumidity(data Stat) string {
 	/*Formats humidity into a string,
 	adding an emoji and a comment
