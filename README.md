@@ -8,4 +8,7 @@ Good luck to you in your work too.
 
 DL
 
-#TODO - rewrite using proper Markdown
+upd0: The course turned out to be excellent.
+
+upd1: I continue practising Go here with "Mail.Ru Go Web Services" course.
+
