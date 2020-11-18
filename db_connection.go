@@ -45,13 +45,15 @@ func main() {
 	}
 
 	routes := mux.NewRouter()
-	routes.HandleFunc("/page/{id:[0-9]+}", ServePage)
+	//routes.HandleFunc("/page/{id:[0-9]+}", ServePageByID)
+	routes.HandleFunc("/page/{guid:[0-9a-zA-Z\\-]+}", ServePageByGUID)
 	http.Handle("/", routes)
 	http.ListenAndServe(":8080", nil)
 
 }
 
-func ServePage(w http.ResponseWriter, r *http.Request) {
+/*
+func ServePageByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	pageID := vars["id"]
 	page := Page{}
@@ -62,6 +64,28 @@ func ServePage(w http.ResponseWriter, r *http.Request) {
 	err := db.QueryRow(context.Background(), sqlString, pageID).Scan(&page.Title, &page.Content, &page.Date)
 	if err != nil {
 		err = fmt.Errorf("unable to get page %v: %w", pageID, err)
+		_, _ = fmt.Fprint(os.Stderr, err)
+	}
+
+	//RESPONSE
+	html := fmt.Sprintf("<html><head><title>%v</title></head><body><h1>%v</h1><div>%v</div><div>%v</div></body></html>",
+		page.Title, page.Title, page.Content, page.Date,
+	)
+	_, _ = fmt.Fprintln(w, html)
+}
+*/
+
+func ServePageByGUID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	pageGUID := vars["guid"]
+	page := Page{}
+	fmt.Println(pageGUID)
+
+	//QUERY
+	sqlString := "SELECT page_title, page_content, page_date FROM pages WHERE page_guid=$1"
+	err := db.QueryRow(context.Background(), sqlString, pageGUID).Scan(&page.Title, &page.Content, &page.Date)
+	if err != nil {
+		err = fmt.Errorf("unable to get page %v: %w", pageGUID, err)
 		_, _ = fmt.Fprint(os.Stderr, err)
 	}
 
