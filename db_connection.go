@@ -87,6 +87,8 @@ func ServePageByGUID(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		err = fmt.Errorf("unable to get page %v: %w", pageGUID, err)
 		_, _ = fmt.Fprint(os.Stderr, err)
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
 	}
 
 	//RESPONSE
