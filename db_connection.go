@@ -82,8 +82,8 @@ func ServePageByGUID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(pageGUID)
 
 	//QUERY
-	sqlString := "SELECT page_title, page_content, page_date FROM pages WHERE page_guid=$1"
-	err := db.QueryRow(context.Background(), sqlString, pageGUID).Scan(&page.Title, &page.Content, &page.Date)
+	sqlString := "SELECT page_title, page_content FROM pages WHERE page_guid=$1"
+	err := db.QueryRow(context.Background(), sqlString, pageGUID).Scan(&page.Title, &page.Content)
 	if err != nil {
 		err = fmt.Errorf("unable to get page %v: %w", pageGUID, err)
 		_, _ = fmt.Fprint(os.Stderr, err)
