@@ -11,8 +11,8 @@ const (
 )
 
 func main() {
-	http.HandleFunc("/static", serveStaticWebpage)	//endpoint "/static"
-	http.HandleFunc("/", serveTimeDynamically)		//endpoint "/"
+	http.HandleFunc("/static", serveStaticWebpage) //endpoint "/static"
+	http.HandleFunc("/", serveTimeDynamically)     //endpoint "/"
 	http.ListenAndServe(PORT, nil)
 }
 
