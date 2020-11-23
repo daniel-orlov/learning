@@ -6,11 +6,13 @@ import (
 	"time"
 )
 
-const (
-	PORT = ":8080"
-)
-
+/*
 func main() {
+	StatDynServer()
+}
+*/
+
+func StatDynServer() {
 	http.HandleFunc("/static", serveStaticWebpage) //endpoint "/static"
 	http.HandleFunc("/", serveTimeDynamically)     //endpoint "/"
 	http.ListenAndServe(PORT, nil)

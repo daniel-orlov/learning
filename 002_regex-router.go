@@ -10,7 +10,13 @@ const (
 	PORT = ":8080"
 )
 
+/*
 func main() {
+	regexRouter()
+}
+*/
+
+func regexRouter() {
 	rtr := mux.NewRouter()
 	rtr.HandleFunc("/pages/{id:[0-9]+}", pageHandler)
 	rtr.HandleFunc("/home", pageHandler)

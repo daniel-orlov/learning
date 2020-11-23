@@ -20,16 +20,24 @@ const (
 )
 */
 
-//keeping db-connection global for DRYness
-var db *pgxpool.Pool
+//keeping Db-connection global for DRYness
+var Db *pgxpool.Pool
 
+/*
 type Page struct {
 	Title   string
 	Content string
 	Date    string
 }
+*/
 
+/*
 func main() {
+	dbConnection()
+}
+*/
+
+func ConnectToDB() {
 	poolConfig, err := pgxpool.ParseConfig(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		err = fmt.Errorf("unable to parse DATABASE_URL: %w", err)
@@ -37,19 +45,20 @@ func main() {
 		os.Exit(1)
 	}
 
-	db, err = pgxpool.ConnectConfig(context.Background(), poolConfig)
+	Db, err = pgxpool.ConnectConfig(context.Background(), poolConfig)
 	if err != nil {
 		err = fmt.Errorf("unable to create connection pool: %w", err)
 		_, _ = fmt.Fprint(os.Stderr, err)
 		os.Exit(1)
 	}
+}
 
+func dbConnection() {
 	routes := mux.NewRouter()
 	//routes.HandleFunc("/page/{id:[0-9]+}", ServePageByID)
 	routes.HandleFunc("/page/{guid:[0-9a-zA-Z\\-]+}", ServePageByGUID)
 	http.Handle("/", routes)
 	http.ListenAndServe(":8080", nil)
-
 }
 
 /*
@@ -73,7 +82,6 @@ func ServePageByID(w http.ResponseWriter, r *http.Request) {
 	)
 	_, _ = fmt.Fprintln(w, html)
 }
-*/
 
 func ServePageByGUID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -83,7 +91,7 @@ func ServePageByGUID(w http.ResponseWriter, r *http.Request) {
 
 	//QUERY
 	sqlString := "SELECT page_title, page_content FROM pages WHERE page_guid=$1"
-	err := db.QueryRow(context.Background(), sqlString, pageGUID).Scan(&page.Title, &page.Content)
+	err := Db.QueryRow(context.Background(), sqlString, pageGUID).Scan(&page.Title, &page.Content)
 	if err != nil {
 		err = fmt.Errorf("unable to get page %v: %w", pageGUID, err)
 		_, _ = fmt.Fprint(os.Stderr, err)
@@ -97,3 +105,4 @@ func ServePageByGUID(w http.ResponseWriter, r *http.Request) {
 	)
 	_, _ = fmt.Fprintln(w, html)
 }
+*/

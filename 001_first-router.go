@@ -6,7 +6,13 @@ import (
 	"net/http"
 )
 
+/*
 func main() {
+	FirstRouter()
+}
+*/
+
+func FirstRouter() {
 	router := mux.NewRouter()
 	router.HandleFunc("/test", TestHandler)
 	http.Handle("/", router)

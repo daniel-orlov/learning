@@ -11,9 +11,6 @@ import (
 	"time"
 )
 
-//keeping db-connection global for DRYness
-var db *pgxpool.Pool
-
 type Page struct {
 	Title      string
 	RawContent string
@@ -33,7 +30,14 @@ func (p Page) TruncatedText() template.HTML {
 	return p.Content
 }
 
+/*
 func main() {
+	ConnectToDB()
+	templates()
+}
+*/
+
+func templates() {
 	poolConfig, err := pgxpool.ParseConfig(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		err = fmt.Errorf("unable to parse DATABASE_URL: %w", err)
@@ -41,7 +45,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	db, err = pgxpool.ConnectConfig(context.Background(), poolConfig)
+	Db, err = pgxpool.ConnectConfig(context.Background(), poolConfig)
 	if err != nil {
 		err = fmt.Errorf("unable to create connection pool: %w", err)
 		_, _ = fmt.Fprint(os.Stderr, err)
@@ -62,7 +66,7 @@ func ServeIndex(w http.ResponseWriter, r *http.Request) {
 	//QUERY
 	sqlString := "SELECT page_title, page_content, page_date, page_guid FROM pages ORDER BY $1 DESC"
 	orderBy := "page_date"
-	pages, err := db.Query(context.Background(), sqlString, orderBy)
+	pages, err := Db.Query(context.Background(), sqlString, orderBy)
 	if err != nil {
 		err = fmt.Errorf("unable to get index: %w", err)
 		_, _ = fmt.Fprint(os.Stderr, err)
@@ -99,7 +103,7 @@ func ServePageByGUID(w http.ResponseWriter, r *http.Request) {
 
 	//QUERY
 	sqlString := "SELECT page_title, page_content, page_date FROM pages WHERE page_guid=$1"
-	err := db.QueryRow(context.Background(), sqlString, pageGUID).Scan(&page.Title, &page.RawContent, &page.Date)
+	err := Db.QueryRow(context.Background(), sqlString, pageGUID).Scan(&page.Title, &page.RawContent, &page.Date)
 	if err != nil {
 		err = fmt.Errorf("unable to get page %v: %w", pageGUID, err)
 		_, _ = fmt.Fprint(os.Stderr, err)
