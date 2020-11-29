@@ -16,9 +16,21 @@ func main() {
 	sortedArr := SelectionSort(selSortArr)
 	fmt.Println("Sorted array: ", sortedArr)
 
-	//Recursion
+	//Recursion - Factorial
 	fmt.Println("\nRECURSIVE FACTORIAL CALCULATION:")
 	x := 5
 	result := factorial(x, "|\t")
 	fmt.Printf("RESULT: Factorial %v = %v\n", x, result)
+
+	//Recursion - Sum of elements in an array
+	fmt.Println("\nRECURSIVE SUM CALCULATION:")
+	arr := []int{5, 7, 9, 12, 21}
+	result = sum(arr, "|\t")
+	fmt.Printf("RESULT: Sum of elements in an array %v = %v\n", arr, result)
+
+	//QuickSort
+	quickSortArr := []int{3, 1, 4, 5, 9, 2, 6, 8, 7, 0}
+	fmt.Println("\nQUICK SORT:\nArray: ", quickSortArr)
+	quickSortedArr := QuickSort(quickSortArr)
+	fmt.Println("Sorted array: ", quickSortedArr)
 }
