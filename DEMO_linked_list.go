@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func demoLL() {
 	//Initiating the head & the list
 	Elendil := NewElem("Elendil", nil)
 	HofElendil := LinkedList{Name: "House of Elendil", head: Elendil, length: 1}

@@ -22,10 +22,22 @@ func NewElem(name string, data Data) *elem {
 	return &el
 }
 
+func (e elem) String() string {
+	return fmt.Sprintf("<%v: %v>", e.name, e.data)
+}
+
 type LinkedList struct {
 	Name   string
 	head   *elem
 	length int
+}
+
+func NewLinkedList(name string, head *elem) *LinkedList {
+	return &LinkedList{
+		Name:   name,
+		head:   head,
+		length: 1,
+	}
 }
 
 func (l *LinkedList) Append(el *elem) {
@@ -38,11 +50,13 @@ func (l *LinkedList) Append(el *elem) {
 	tail.next = el
 	l.length++
 }
+
 func (l *LinkedList) Prepend(el *elem) {
 	el.next = l.head
 	l.head = el
 	l.length++
 }
+
 func (l *LinkedList) Insert(el *elem, prevElName string) {
 	prev, ok := l.SearchByName(prevElName)
 	if !ok {
@@ -55,6 +69,7 @@ func (l *LinkedList) Insert(el *elem, prevElName string) {
 	el.next = oldNext
 	l.length++
 }
+
 func (l *LinkedList) PopHead() *elem {
 	oldHead := l.head
 	newHead := oldHead.next
@@ -63,6 +78,7 @@ func (l *LinkedList) PopHead() *elem {
 	oldHead.next = nil
 	return oldHead
 }
+
 func (l *LinkedList) PopTail() *elem {
 	penult := l.penultimate()
 	tail := penult.next
@@ -70,6 +86,7 @@ func (l *LinkedList) PopTail() *elem {
 	l.length--
 	return tail
 }
+
 func (l *LinkedList) SearchByName(elName string) (*elem, bool) {
 	if l.head == nil {
 		err := fmt.Errorf("empty or headless LinkedList")
@@ -91,11 +108,12 @@ func (l *LinkedList) SearchByName(elName string) (*elem, bool) {
 	_, _ = fmt.Fprint(os.Stderr, err)
 	return nil, false
 }
+
 func (l *LinkedList) Repr() {
 	fmt.Printf("%v:\n", l.Name)
 	cursor := l.head
 	for {
-		fmt.Printf("%v -->\t", cursor.name)
+		fmt.Printf("%v -->\t", cursor)
 		if cursor.next == nil {
 			fmt.Print("<nil>\n")
 			break
