@@ -1,14 +1,16 @@
-package go_algorithms
+package main
 
-func BinarySearch(list []int, sought int) int {
+/*Time Complexity: O(log(n))
+ */
+func BinarySearch(arr []int, sought int) int {
 	var (
 		low, mid, guess int
 	)
-	high := len(list) - 1
+	high := len(arr) - 1
 
 	for low < high {
 		mid = (low + high) / 2
-		guess = list[mid]
+		guess = arr[mid]
 		if guess == sought {
 			return mid
 		}
