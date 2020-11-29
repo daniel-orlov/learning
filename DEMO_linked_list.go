@@ -64,7 +64,7 @@ func main() {
 	HofElendil.Repr()
 
 	//Oh, #@*&. We have Isildur's brother Anarion stuck there in the middle \-_- //
-	//Well, before we decide to promote this to a feature, let's just say we fix this in Bi-Directional Linked Lists
+	//Well, before we decide to promote this to a feature, let's just say we fix this in Double Linked Lists
 	//Thanks for joining me and have a great day!
 	//
 	//

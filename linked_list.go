@@ -11,7 +11,7 @@ type elem struct {
 	name string
 	data Data
 	next *elem
-	//prev *elem //will use for Bi-Directional LLs
+	//prev *elem //will use for Double LLs
 }
 
 func NewElem(name string, data Data) *elem {
