@@ -1,8 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
 	//Binary Search
@@ -17,4 +15,10 @@ func main() {
 	fmt.Println("\nSELECTION SORT:\nArray: ", selSortArr)
 	sortedArr := SelectionSort(selSortArr)
 	fmt.Println("Sorted array: ", sortedArr)
+
+	//Recursion
+	fmt.Println("\nRECURSIVE FACTORIAL CALCULATION:")
+	x := 5
+	result := factorial(x, "|\t")
+	fmt.Printf("RESULT: Factorial %v = %v\n", x, result)
 }

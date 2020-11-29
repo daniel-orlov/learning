@@ -8,7 +8,7 @@ func SelectionSort(arr []int) []int {
 	for range arr {
 		minIndex = findIndexMin(arr)
 		sortedArr = append(sortedArr, arr[minIndex])
-		arr = append(arr[:minIndex], arr[minIndex+1:]...)
+		arr = PopItem(arr, minIndex)
 	}
 	return sortedArr
 }
@@ -34,5 +34,12 @@ func findIndexMin(arr []int) int {
 			min = val
 		}
 	}
+
 	return minIndex
+}
+
+func PopItem(arr []int, index int) []int {
+	newArr := make([]int, 0, len(arr)-1)
+	newArr = append(arr[:index], arr[index+1:]...)
+	return newArr
 }
