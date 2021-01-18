@@ -1,4 +1,4 @@
-package main
+package search
 
 /*Time Complexity: O(log(n))
  */

@@ -1,4 +1,4 @@
-package main
+package sorting
 
 /*Time Complexity: O(n^2)
  */
