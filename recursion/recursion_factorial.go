@@ -9,5 +9,5 @@ func Factorial(x int, prefix string) int {
 		return x
 	}
 	prefix += "|\t"
-	return x * factorial(x-1, prefix)
+	return x * Factorial(x-1, prefix)
 }
