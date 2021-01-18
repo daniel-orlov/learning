@@ -2,7 +2,7 @@ package recursion
 
 import "fmt"
 
-func tailFactorial(x int, prefix string) int {
+func TailFactorial(x int, prefix string) int {
 	return _tailFactorial(x-1, x, prefix)
 }
 
