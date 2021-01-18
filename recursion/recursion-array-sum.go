@@ -9,5 +9,5 @@ func Sum(arr []int, prefix string) int {
 		return arr[0]
 	}
 	prefix += "|\t"
-	return arr[0] + sum(arr[1:], prefix)
+	return arr[0] + Sum(arr[1:], prefix)
 }
