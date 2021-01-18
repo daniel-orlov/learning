@@ -1,39 +1,42 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	ll "linked"
+)
 
 func demoLL() {
 	//Initiating the head & the list
-	Elendil := NewElem("Elendil", nil)
-	HofElendil := LinkedList{Name: "House of Elendil", head: Elendil, length: 1}
+	Elendil := ll.NewElem("Elendil", nil)
+	HofElendil := ll.inkedList{Name: "House of Elendil", head: Elendil, length: 1}
 
 	//Appending an elem - a son of Elendil
-	Isildur := NewElem("Isildur", nil)
+	Isildur := ll.NewElem("Isildur", nil)
 	HofElendil.Append(Isildur)
 	HofElendil.Repr()
 
 	//Adding another son of Elendil
-	Anarion := NewElem("Anarion", nil)
+	Anarion := ll.NewElem("Anarion", nil)
 	HofElendil.Append(Anarion)
 	HofElendil.Repr()
 
 	//Wait a minute... We forgot to add Elros, the ancestor of Elendil.
 	//Let's prepend him
-	Elros := NewElem("Elros", nil)
+	Elros := ll.NewElem("Elros", nil)
 	HofElendil.Prepend(Elros)
 	HofElendil.Repr()
 
 	//That's better! But what about Elrond?
 	//Yeah, right...
-	Elrond := NewElem("Elrond", nil)
+	Elrond := ll.NewElem("Elrond", nil)
 	HofElendil.Prepend(Elrond)
 	HofElendil.Repr()
 
 	//Beor with me, fellow Tolkienists (especially the most attentive ones)
 	//Let's quickly add some more
-	Arvedui := NewElem("Arvedui", nil)
+	Arvedui := ll.NewElem("Arvedui", nil)
 	HofElendil.Append(Arvedui)
-	Aragorn := NewElem("Aragorn", nil)
+	Aragorn := ll.NewElem("Aragorn", nil)
 	HofElendil.Append(Aragorn)
 
 	//Let's see what we have for now, shall we?
@@ -46,7 +49,7 @@ func demoLL() {
 
 	//First things first: we forgot Arathorn II, Aragorn's father
 	//He should be between his son and Arvedui
-	Arathorn := NewElem("Arathorn", nil)
+	Arathorn := ll.NewElem("Arathorn", nil)
 	HofElendil.Insert(Arathorn, "Arvedui")
 
 	//Then let's get rid of Elrond (sorry). He is a brother, not a father to Elros

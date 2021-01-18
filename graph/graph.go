@@ -6,16 +6,16 @@ import (
 )
 
 // Vertex for the graph
-type vertex struct {
+type Vertex struct {
 	ID       int
-	Vertices map[int]*vertex
+	Vertices map[int]*Vertex
 }
 
-// newVertex is a type vertex constructor
-func newVertex(id int) *vertex {
-	return &vertex{
+// newVertex is a type Vertex constructor
+func newVertex(id int) *Vertex {
+	return &Vertex{
 		ID:       id,
-		Vertices: map[int]*vertex{},
+		Vertices: map[int]*Vertex{},
 	}
 }
 
@@ -23,7 +23,7 @@ func newVertex(id int) *vertex {
 type Graph struct {
 	Directed bool
 	Name     string
-	Vertices map[int]*vertex
+	Vertices map[int]*Vertex
 }
 
 // NewGraph is a type Graph constructor
@@ -31,7 +31,7 @@ func NewGraph(name string, isDirected bool) *Graph {
 	return &Graph{
 		Directed: isDirected,
 		Name:     name,
-		Vertices: map[int]*vertex{},
+		Vertices: map[int]*Vertex{},
 	}
 }
 

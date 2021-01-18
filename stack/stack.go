@@ -1,7 +1,7 @@
 package stack
 
 import (
-	ll "linked"
+	ll "github.com/daniel-orlov/go-data-structures/linked"
 )
 
 type Stack struct {
@@ -20,12 +20,12 @@ func NewStack(name string, elements ...*ll.elem) *Stack {
 	return stack
 }
 
-func (s *Stack) Push(elements ...*elem) {
+func (s *Stack) Push(elements ...*ll.Elem) {
 	for _, el := range elements {
 		s.list.Append(el)
 	}
 }
 
-func (s *Stack) Pop() *elem {
+func (s *Stack) Pop() *ll.Elem {
 	return s.list.PopTail()
 }

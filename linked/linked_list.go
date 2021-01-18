@@ -7,32 +7,32 @@ import (
 
 type Data interface{}
 
-type elem struct {
+type Elem struct {
 	name string
 	data Data
-	next *elem
-	//prev *elem //will use for Double LLs
+	next *Elem
+	//prev *Elem //will use for Double LLs
 }
 
-func NewElem(name string, data Data) *elem {
-	el := elem{
+func NewElem(name string, data Data) *Elem {
+	el := Elem{
 		name: name,
 		data: data,
 	}
 	return &el
 }
 
-func (e elem) String() string {
+func (e Elem) String() string {
 	return fmt.Sprintf("<%v: %v>", e.name, e.data)
 }
 
 type LinkedList struct {
 	Name   string
-	head   *elem
+	head   *Elem
 	length int
 }
 
-func NewLinkedList(name string, head *elem) *LinkedList {
+func NewLinkedList(name string, head *Elem) *LinkedList {
 	return &LinkedList{
 		Name:   name,
 		head:   head,
@@ -40,8 +40,8 @@ func NewLinkedList(name string, head *elem) *LinkedList {
 	}
 }
 
-func (l *LinkedList) Append(el *elem) {
-	var tail *elem
+func (l *LinkedList) Append(el *Elem) {
+	var tail *Elem
 	if l.length == 1 {
 		tail = l.head
 	} else {
@@ -51,13 +51,13 @@ func (l *LinkedList) Append(el *elem) {
 	l.length++
 }
 
-func (l *LinkedList) Prepend(el *elem) {
+func (l *LinkedList) Prepend(el *Elem) {
 	el.next = l.head
 	l.head = el
 	l.length++
 }
 
-func (l *LinkedList) Insert(el *elem, prevElName string) {
+func (l *LinkedList) Insert(el *Elem, prevElName string) {
 	prev, ok := l.SearchByName(prevElName)
 	if !ok {
 		err := fmt.Errorf("element with name '%v' not found", prevElName)
@@ -70,7 +70,7 @@ func (l *LinkedList) Insert(el *elem, prevElName string) {
 	l.length++
 }
 
-func (l *LinkedList) PopHead() *elem {
+func (l *LinkedList) PopHead() *Elem {
 	oldHead := l.head
 	newHead := oldHead.next
 	l.head = newHead
@@ -79,7 +79,7 @@ func (l *LinkedList) PopHead() *elem {
 	return oldHead
 }
 
-func (l *LinkedList) PopTail() *elem {
+func (l *LinkedList) PopTail() *Elem {
 	penult := l.penultimate()
 	tail := penult.next
 	penult.next = nil //I have a bad feeling about this
@@ -87,7 +87,7 @@ func (l *LinkedList) PopTail() *elem {
 	return tail
 }
 
-func (l *LinkedList) SearchByName(elName string) (*elem, bool) {
+func (l *LinkedList) SearchByName(elName string) (*Elem, bool) {
 	if l.head == nil {
 		err := fmt.Errorf("empty or headless LinkedList")
 		_, _ = fmt.Fprint(os.Stderr, err)
@@ -122,7 +122,7 @@ func (l *LinkedList) Repr() {
 	}
 }
 
-func (l *LinkedList) penultimate() *elem {
+func (l *LinkedList) penultimate() *Elem {
 	cursor := l.head
 	if l.length == 1 {
 		return cursor

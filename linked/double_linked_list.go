@@ -5,33 +5,37 @@ import (
 	"os"
 )
 
-type element struct {
+// Element is a double-linked list specific type
+type Element struct {
 	name string
 	data Data
-	next *element
-	prev *element
+	next *Element
+	prev *Element
 }
 
-func NewElement(name string, data Data) *element {
-	el := element{
+// NewElement is a type Element constructor
+func NewElement(name string, data Data) *Element {
+	el := Element{
 		name: name,
 		data: data,
 	}
 	return &el
 }
 
-func (e element) String() string {
+// String is here to make fmt work with type Element
+func (e Element) String() string {
 	return fmt.Sprintf("<%v: %v>", e.name, e.data)
 }
 
+// DoubleLinkedList
 type DoubleLinkedList struct {
 	Name   string
-	head   *element
-	tail   *element
+	head   *Element
+	tail   *Element
 	length int
 }
 
-func NewDoubleLinkedList(name string, head *element) *DoubleLinkedList {
+func NewDoubleLinkedList(name string, head *Element) *DoubleLinkedList {
 	return &DoubleLinkedList{
 		Name:   name,
 		head:   head,
@@ -40,24 +44,24 @@ func NewDoubleLinkedList(name string, head *element) *DoubleLinkedList {
 	}
 }
 
-func (l *DoubleLinkedList) Append(el *element) {
+func (l *DoubleLinkedList) Append(el *Element) {
 	l.tail.next = el
 	el.prev = l.tail
 	l.tail = el
 	l.length++
 }
 
-func (l *DoubleLinkedList) Prepend(el *element) {
+func (l *DoubleLinkedList) Prepend(el *Element) {
 	el.next = l.head
 	l.head.prev = el
 	l.head = el
 	l.length++
 }
 
-func (l *DoubleLinkedList) InsertAfterElement(el *element, elName string, backwards bool) {
+func (l *DoubleLinkedList) InsertAfterElement(el *Element, elName string, backwards bool) {
 	prev, ok := l.SearchByName(elName, backwards)
 	if !ok {
-		err := fmt.Errorf("element with name '%v' not found", elName)
+		err := fmt.Errorf("Element with name '%v' not found", elName)
 		_, _ = fmt.Fprint(os.Stderr, err)
 		return
 	}
@@ -69,10 +73,10 @@ func (l *DoubleLinkedList) InsertAfterElement(el *element, elName string, backwa
 	l.length++
 }
 
-func (l *DoubleLinkedList) InsertBeforeElement(el *element, elName string, backwards bool) {
+func (l *DoubleLinkedList) InsertBeforeElement(el *Element, elName string, backwards bool) {
 	next, ok := l.SearchByName(elName, backwards)
 	if !ok {
-		err := fmt.Errorf("element with name '%v' not found", elName)
+		err := fmt.Errorf("Element with name '%v' not found", elName)
 		_, _ = fmt.Fprint(os.Stderr, err)
 		return
 	}
@@ -84,7 +88,7 @@ func (l *DoubleLinkedList) InsertBeforeElement(el *element, elName string, backw
 	l.length++
 }
 
-func (l *DoubleLinkedList) PopHead() *element {
+func (l *DoubleLinkedList) PopHead() *Element {
 	oldHead := l.head
 	newHead := oldHead.next
 	l.head = newHead
@@ -94,7 +98,7 @@ func (l *DoubleLinkedList) PopHead() *element {
 	return oldHead
 }
 
-func (l *DoubleLinkedList) PopTail() *element {
+func (l *DoubleLinkedList) PopTail() *Element {
 	oldTail := l.tail
 	newTail := l.tail.prev
 	l.tail = newTail
@@ -104,7 +108,7 @@ func (l *DoubleLinkedList) PopTail() *element {
 	return oldTail
 }
 
-func (l *DoubleLinkedList) SearchByName(elName string, backwards bool) (*element, bool) {
+func (l *DoubleLinkedList) SearchByName(elName string, backwards bool) (*Element, bool) {
 	if l.head == nil {
 		err := fmt.Errorf("empty DoubleLinkedList")
 		_, _ = fmt.Fprint(os.Stderr, err)
