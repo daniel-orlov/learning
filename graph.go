@@ -50,7 +50,7 @@ func (g *Graph) AddEdge(firstVertexID, secondVertexID int) error {
 		return fmt.Errorf("%wmissing some vertices", ErrCreateEdge)
 	}
 
-	if _, ok := vert1.Vertices[vert2.Id]; ok {
+	if _, ok := vert1.Vertices[vert2.ID]; ok {
 		return fmt.Errorf("%wedge already exists", ErrCreateEdge)
 	}
 
