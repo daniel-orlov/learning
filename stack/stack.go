@@ -1,14 +1,18 @@
-package main
+package stack
+
+import (
+	ll "linked"
+)
 
 type Stack struct {
 	Name string
-	list *LinkedList
+	list *ll.LinkedList
 }
 
-func NewStack(name string, elements ...*elem) *Stack {
+func NewStack(name string, elements ...*ll.elem) *Stack {
 	stack := &Stack{
 		Name: name,
-		list: NewLinkedList("stack", elements[0]),
+		list: ll.NewLinkedList("stack", elements[0]),
 	}
 	for _, i := range elements[1:] {
 		stack.list.Append(i)
