@@ -1,7 +1,6 @@
 package search
 
-/*Time Complexity: O(log(n))
- */
+// BinarySearch is a search algorithm with time complexity of O(log(n))
 func BinarySearch(arr []int, sought int) int {
 	var (
 		low, mid, guess int
