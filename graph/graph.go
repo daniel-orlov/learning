@@ -62,5 +62,11 @@ func (g *Graph) AddEdge(firstVertexID, secondVertexID int) error {
 	return nil
 }
 
+// Size counts Vertices in the graph and returns the total
+func (g *Graph) Size() int {
+	//TODO
+	return -1
+}
+
 // ErrCreateEdge indicates an edge cannot be created
 var ErrCreateEdge = errors.New("enable to create an edge: ")

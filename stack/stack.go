@@ -4,28 +4,39 @@ import (
 	ll "github.com/daniel-orlov/go-data-structures/linked"
 )
 
+// Stack is a basic implementation of a LIFO stack using LinkedList
 type Stack struct {
+	// Name is an ID field for a Stack
 	Name string
-	list *ll.LinkedList
+	// List is an actual linked list behind the Stack
+	List *ll.LinkedList
 }
 
-func NewStack(name string, elements ...*ll.elem) *Stack {
+// NewStack is a type Stack consctructor
+func NewStack(name string, elements ...*ll.Elem) *Stack {
 	stack := &Stack{
 		Name: name,
-		list: ll.NewLinkedList("stack", elements[0]),
+		List: ll.NewLinkedList("stack", elements[0]),
 	}
 	for _, i := range elements[1:] {
-		stack.list.Append(i)
+		stack.List.Append(i)
 	}
 	return stack
 }
 
+// Push supports adding 1 or more Elems to the stack
 func (s *Stack) Push(elements ...*ll.Elem) {
 	for _, el := range elements {
-		s.list.Append(el)
+		s.List.Append(el)
 	}
 }
 
+// Pop removes the topmost Elem from the Stack and returns it
 func (s *Stack) Pop() *ll.Elem {
-	return s.list.PopTail()
+	return s.List.PopTail()
+}
+
+// IsEmpty checks if the stack is empty
+func (s *Stack) IsEmpty() bool {
+	return s.List.Length > 0
 }

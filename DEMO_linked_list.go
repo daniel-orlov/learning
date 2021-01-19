@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	ll "linked"
+
+	ll "github.com/daniel-orlov/go-data-structures/linked"
 )
 
 func demoLL() {

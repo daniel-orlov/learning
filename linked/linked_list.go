@@ -8,53 +8,53 @@ import (
 type Data interface{}
 
 type Elem struct {
-	name string
-	data Data
-	next *Elem
-	//prev *Elem //will use for Double LLs
+	ID   int
+	Name string
+	Data Data
+	Next *Elem
 }
 
 func NewElem(name string, data Data) *Elem {
 	el := Elem{
-		name: name,
-		data: data,
+		Name: name,
+		Data: data,
 	}
 	return &el
 }
 
 func (e Elem) String() string {
-	return fmt.Sprintf("<%v: %v>", e.name, e.data)
+	return fmt.Sprintf("<%v: %v>", e.Name, e.Data)
 }
 
 type LinkedList struct {
 	Name   string
 	head   *Elem
-	length int
+	Length int
 }
 
 func NewLinkedList(name string, head *Elem) *LinkedList {
 	return &LinkedList{
 		Name:   name,
 		head:   head,
-		length: 1,
+		Length: 1,
 	}
 }
 
 func (l *LinkedList) Append(el *Elem) {
 	var tail *Elem
-	if l.length == 1 {
+	if l.Length == 1 {
 		tail = l.head
 	} else {
-		tail = l.penultimate().next
+		tail = l.penultimate().Next
 	}
-	tail.next = el
-	l.length++
+	tail.Next = el
+	l.Length++
 }
 
 func (l *LinkedList) Prepend(el *Elem) {
-	el.next = l.head
+	el.Next = l.head
 	l.head = el
-	l.length++
+	l.Length++
 }
 
 func (l *LinkedList) Insert(el *Elem, prevElName string) {
@@ -64,26 +64,26 @@ func (l *LinkedList) Insert(el *Elem, prevElName string) {
 		_, _ = fmt.Fprint(os.Stderr, err)
 		return
 	}
-	oldNext := prev.next
-	prev.next = el
-	el.next = oldNext
-	l.length++
+	oldNext := prev.Next
+	prev.Next = el
+	el.Next = oldNext
+	l.Length++
 }
 
 func (l *LinkedList) PopHead() *Elem {
 	oldHead := l.head
-	newHead := oldHead.next
+	newHead := oldHead.Next
 	l.head = newHead
-	l.length--
-	oldHead.next = nil
+	l.Length--
+	oldHead.Next = nil
 	return oldHead
 }
 
 func (l *LinkedList) PopTail() *Elem {
 	penult := l.penultimate()
-	tail := penult.next
-	penult.next = nil //I have a bad feeling about this
-	l.length--
+	tail := penult.Next
+	penult.Next = nil //I have a bad feeling about this
+	l.Length--
 	return tail
 }
 
@@ -96,13 +96,13 @@ func (l *LinkedList) SearchByName(elName string) (*Elem, bool) {
 	cursor := l.head
 
 	for {
-		if cursor.name == elName {
+		if cursor.Name == elName {
 			return cursor, true
 		}
-		if cursor.next == nil {
+		if cursor.Next == nil {
 			break
 		}
-		cursor = cursor.next
+		cursor = cursor.Next
 	}
 	err := fmt.Errorf("element with name '%v' not found in '%v'.", elName, l.Name)
 	_, _ = fmt.Fprint(os.Stderr, err)
@@ -114,24 +114,24 @@ func (l *LinkedList) Repr() {
 	cursor := l.head
 	for {
 		fmt.Printf("%v -->\t", cursor)
-		if cursor.next == nil {
+		if cursor.Next == nil {
 			fmt.Print("<nil>\n")
 			break
 		}
-		cursor = cursor.next
+		cursor = cursor.Next
 	}
 }
 
 func (l *LinkedList) penultimate() *Elem {
 	cursor := l.head
-	if l.length == 1 {
+	if l.Length == 1 {
 		return cursor
 	}
 
 	for {
-		if cursor.next.next == nil {
+		if cursor.Next.Next == nil {
 			return cursor
 		}
-		cursor = cursor.next
+		cursor = cursor.Next
 	}
 }
