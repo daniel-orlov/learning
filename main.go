@@ -4,14 +4,16 @@ func main() {
 	//Binary Search
 	//demoBinarySearch()
 
+	demoDFS()
+
 	//SelectionSort
 	//demoSelectionSort()
 
 	//Recursion - Factorial
-	demoRecusionFactorial()
+	// demoRecusionFactorial()
 
 	//Tail-Recursion - Factorial
-	demoTailRecursionFactorial()
+	// demoTailRecursionFactorial()
 
 	//Recursion - Sum of elements in an array
 	//demoRecursionSumArr()
