@@ -3,6 +3,7 @@ package linked
 import (
 	"fmt"
 	"os"
+	"strconv"
 )
 
 type Data interface{}
@@ -19,6 +20,13 @@ func NewElem(name string, data Data) *Elem {
 		Name: name,
 		Data: data,
 	}
+	if name[0] > '0' && name[0] < '9' {
+		id, err := strconv.Atoi(name)
+		if err == nil {
+			el.ID = id
+		}
+	}
+
 	return &el
 }
 
