@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-// Element is a double-linked list specific type
+// Element is a double-linked list specific type for
 type Element struct {
 	name string
 	data Data
@@ -22,21 +22,21 @@ func NewElement(name string, data Data) *Element {
 	return &el
 }
 
-// String is here to make fmt work with type Element
 func (e Element) String() string {
 	return fmt.Sprintf("<%v: %v>", e.name, e.data)
 }
 
-// DoubleLinkedList
-type DoubleLinkedList struct {
+// DoubleList is an implementation of a double-linked list
+type DoubleList struct {
 	Name   string
 	head   *Element
 	tail   *Element
 	length int
 }
 
-func NewDoubleLinkedList(name string, head *Element) *DoubleLinkedList {
-	return &DoubleLinkedList{
+// NewDoubleList is a type DoubleList constructor
+func NewDoubleList(name string, head *Element) *DoubleList {
+	return &DoubleList{
 		Name:   name,
 		head:   head,
 		tail:   head,
@@ -44,21 +44,25 @@ func NewDoubleLinkedList(name string, head *Element) *DoubleLinkedList {
 	}
 }
 
-func (l *DoubleLinkedList) Append(el *Element) {
+// Append adds a new last element to the list
+func (l *DoubleList) Append(el *Element) {
 	l.tail.next = el
 	el.prev = l.tail
 	l.tail = el
 	l.length++
 }
 
-func (l *DoubleLinkedList) Prepend(el *Element) {
+// Prepend adds a new first element to the list
+func (l *DoubleList) Prepend(el *Element) {
 	el.next = l.head
 	l.head.prev = el
 	l.head = el
 	l.length++
 }
 
-func (l *DoubleLinkedList) InsertAfterElement(el *Element, elName string, backwards bool) {
+// InsertAfterElement allows adding an Element after any other one on a list
+// It supports searching both head-to-tail and backwards
+func (l *DoubleList) InsertAfterElement(el *Element, elName string, backwards bool) {
 	prev, ok := l.SearchByName(elName, backwards)
 	if !ok {
 		err := fmt.Errorf("Element with name '%v' not found", elName)
@@ -73,7 +77,9 @@ func (l *DoubleLinkedList) InsertAfterElement(el *Element, elName string, backwa
 	l.length++
 }
 
-func (l *DoubleLinkedList) InsertBeforeElement(el *Element, elName string, backwards bool) {
+// InsertBeforeElement allows adding an Element before any other one on a list
+// It supports searching both head-to-tail and backwards
+func (l *DoubleList) InsertBeforeElement(el *Element, elName string, backwards bool) {
 	next, ok := l.SearchByName(elName, backwards)
 	if !ok {
 		err := fmt.Errorf("Element with name '%v' not found", elName)
@@ -88,7 +94,8 @@ func (l *DoubleLinkedList) InsertBeforeElement(el *Element, elName string, backw
 	l.length++
 }
 
-func (l *DoubleLinkedList) PopHead() *Element {
+// PopHead removes the first element from the list and returns it
+func (l *DoubleList) PopHead() *Element {
 	oldHead := l.head
 	newHead := oldHead.next
 	l.head = newHead
@@ -98,7 +105,8 @@ func (l *DoubleLinkedList) PopHead() *Element {
 	return oldHead
 }
 
-func (l *DoubleLinkedList) PopTail() *Element {
+// PopTail removes the last element from the list and returns it
+func (l *DoubleList) PopTail() *Element {
 	oldTail := l.tail
 	newTail := l.tail.prev
 	l.tail = newTail
@@ -108,9 +116,10 @@ func (l *DoubleLinkedList) PopTail() *Element {
 	return oldTail
 }
 
-func (l *DoubleLinkedList) SearchByName(elName string, backwards bool) (*Element, bool) {
+// SearchByName supports element look up using Name field (both head-to-tail and backwards)
+func (l *DoubleList) SearchByName(elName string, backwards bool) (*Element, bool) {
 	if l.head == nil {
-		err := fmt.Errorf("empty DoubleLinkedList")
+		err := fmt.Errorf("empty DoubleList")
 		_, _ = fmt.Fprint(os.Stderr, err)
 		return nil, false
 	}
@@ -139,13 +148,15 @@ func (l *DoubleLinkedList) SearchByName(elName string, backwards bool) (*Element
 			cursor = cursor.prev
 		}
 	}
-	//not found
+
+	// not found
 	err := fmt.Errorf("element with name '%v' not found in '%v'.", elName, l.Name)
 	_, _ = fmt.Fprint(os.Stderr, err)
 	return nil, false
 }
 
-func (l *DoubleLinkedList) Repr(backwards bool) {
+// Repr outputs a representation of a Linked List ina humanly-readable form
+func (l *DoubleList) Repr(backwards bool) {
 	fmt.Printf("%v:\n", l.Name)
 	if !backwards {
 		fmt.Println("Head to tail: ")

@@ -6,8 +6,10 @@ import (
 	"strconv"
 )
 
+// Data is an interface to allow storing arbitrary information inside an Elem
 type Data interface{}
 
+// Elem is a basic building block for a List
 type Elem struct {
 	ID   int
 	Name string
@@ -15,6 +17,7 @@ type Elem struct {
 	Next *Elem
 }
 
+// NewElem is a type Elem constructor
 func NewElem(name string, data Data) *Elem {
 	el := Elem{
 		Name: name,
@@ -34,24 +37,27 @@ func (e Elem) String() string {
 	return fmt.Sprintf("<%v: %v>", e.Name, e.Data)
 }
 
-type LinkedList struct {
+// List is an implementation of a linked list
+type List struct {
 	Name   string
-	head   *Elem
+	Head   *Elem
 	Length int
 }
 
-func NewLinkedList(name string, head *Elem) *LinkedList {
-	return &LinkedList{
+// NewList is a type List constructor
+func NewList(name string, head *Elem) *List {
+	return &List{
 		Name:   name,
-		head:   head,
+		Head:   head,
 		Length: 1,
 	}
 }
 
-func (l *LinkedList) Append(el *Elem) {
+// Append adds a new last element to the list
+func (l *List) Append(el *Elem) {
 	var tail *Elem
 	if l.Length == 1 {
-		tail = l.head
+		tail = l.Head
 	} else {
 		tail = l.penultimate().Next
 	}
@@ -59,13 +65,16 @@ func (l *LinkedList) Append(el *Elem) {
 	l.Length++
 }
 
-func (l *LinkedList) Prepend(el *Elem) {
-	el.Next = l.head
-	l.head = el
+// Prepend adds a new first element to the list
+func (l *List) Prepend(el *Elem) {
+	el.Next = l.Head
+	l.Head = el
 	l.Length++
 }
 
-func (l *LinkedList) Insert(el *Elem, prevElName string) {
+// Insert allows adding an element anywhere to the list
+// with the name of the previous element provided
+func (l *List) Insert(el *Elem, prevElName string) {
 	prev, ok := l.SearchByName(prevElName)
 	if !ok {
 		err := fmt.Errorf("element with name '%v' not found", prevElName)
@@ -78,30 +87,33 @@ func (l *LinkedList) Insert(el *Elem, prevElName string) {
 	l.Length++
 }
 
-func (l *LinkedList) PopHead() *Elem {
-	oldHead := l.head
+// PopHead removes and returns the first element in the list
+func (l *List) PopHead() *Elem {
+	oldHead := l.Head
 	newHead := oldHead.Next
-	l.head = newHead
+	l.Head = newHead
 	l.Length--
 	oldHead.Next = nil
 	return oldHead
 }
 
-func (l *LinkedList) PopTail() *Elem {
+// PopTail removes and returns the last element in the list
+func (l *List) PopTail() *Elem {
 	penult := l.penultimate()
 	tail := penult.Next
-	penult.Next = nil //I have a bad feeling about this
+	penult.Next = nil // I have a bad feeling about this
 	l.Length--
 	return tail
 }
 
-func (l *LinkedList) SearchByName(elName string) (*Elem, bool) {
-	if l.head == nil {
-		err := fmt.Errorf("empty or headless LinkedList")
+// SearchByName supports element look up using Name field
+func (l *List) SearchByName(elName string) (*Elem, bool) {
+	if l.Head == nil {
+		err := fmt.Errorf("empty or headless List")
 		_, _ = fmt.Fprint(os.Stderr, err)
 		return nil, false
 	}
-	cursor := l.head
+	cursor := l.Head
 
 	for {
 		if cursor.Name == elName {
@@ -112,14 +124,15 @@ func (l *LinkedList) SearchByName(elName string) (*Elem, bool) {
 		}
 		cursor = cursor.Next
 	}
-	err := fmt.Errorf("element with name '%v' not found in '%v'.", elName, l.Name)
+	err := fmt.Errorf("element with name '%v' not found in '%v'", elName, l.Name)
 	_, _ = fmt.Fprint(os.Stderr, err)
 	return nil, false
 }
 
-func (l *LinkedList) Repr() {
+// Repr outputs a representation of a Linked List ina humanly-readable form
+func (l *List) Repr() {
 	fmt.Printf("%v:\n", l.Name)
-	cursor := l.head
+	cursor := l.Head
 	for {
 		fmt.Printf("%v -->\t", cursor)
 		if cursor.Next == nil {
@@ -130,8 +143,8 @@ func (l *LinkedList) Repr() {
 	}
 }
 
-func (l *LinkedList) penultimate() *Elem {
-	cursor := l.head
+func (l *List) penultimate() *Elem {
+	cursor := l.Head
 	if l.Length == 1 {
 		return cursor
 	}

@@ -3,41 +3,41 @@ package main
 import (
 	"fmt"
 
-	ll "github.com/daniel-orlov/go-data-structures/linked"
+	linked "github.com/daniel-orlov/go-data-structures/linked"
 )
 
 func demoLL() {
 	//Initiating the head & the list
-	Elendil := ll.NewElem("Elendil", nil)
-	HofElendil := ll.inkedList{Name: "House of Elendil", head: Elendil, length: 1}
+	Elendil := linked.NewElem("Elendil", nil)
+	HofElendil := linked.List{Name: "House of Elendil", Head: Elendil, Length: 1}
 
 	//Appending an elem - a son of Elendil
-	Isildur := ll.NewElem("Isildur", nil)
+	Isildur := linked.NewElem("Isildur", nil)
 	HofElendil.Append(Isildur)
 	HofElendil.Repr()
 
 	//Adding another son of Elendil
-	Anarion := ll.NewElem("Anarion", nil)
+	Anarion := linked.NewElem("Anarion", nil)
 	HofElendil.Append(Anarion)
 	HofElendil.Repr()
 
 	//Wait a minute... We forgot to add Elros, the ancestor of Elendil.
 	//Let's prepend him
-	Elros := ll.NewElem("Elros", nil)
+	Elros := linked.NewElem("Elros", nil)
 	HofElendil.Prepend(Elros)
 	HofElendil.Repr()
 
 	//That's better! But what about Elrond?
 	//Yeah, right...
-	Elrond := ll.NewElem("Elrond", nil)
+	Elrond := linked.NewElem("Elrond", nil)
 	HofElendil.Prepend(Elrond)
 	HofElendil.Repr()
 
 	//Beor with me, fellow Tolkienists (especially the most attentive ones)
 	//Let's quickly add some more
-	Arvedui := ll.NewElem("Arvedui", nil)
+	Arvedui := linked.NewElem("Arvedui", nil)
 	HofElendil.Append(Arvedui)
-	Aragorn := ll.NewElem("Aragorn", nil)
+	Aragorn := linked.NewElem("Aragorn", nil)
 	HofElendil.Append(Aragorn)
 
 	//Let's see what we have for now, shall we?
@@ -50,7 +50,7 @@ func demoLL() {
 
 	//First things first: we forgot Arathorn II, Aragorn's father
 	//He should be between his son and Arvedui
-	Arathorn := ll.NewElem("Arathorn", nil)
+	Arathorn := linked.NewElem("Arathorn", nil)
 	HofElendil.Insert(Arathorn, "Arvedui")
 
 	//Then let's get rid of Elrond (sorry). He is a brother, not a father to Elros

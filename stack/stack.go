@@ -1,22 +1,22 @@
 package stack
 
 import (
-	ll "github.com/daniel-orlov/go-data-structures/linked"
+	"github.com/daniel-orlov/go-data-structures/linked"
 )
 
-// Stack is a basic implementation of a LIFO stack using LinkedList
+// Stack is a basic implementation of a LIFO stack using a linked list
 type Stack struct {
 	// Name is an ID field for a Stack
 	Name string
 	// List is an actual linked list behind the Stack
-	List *ll.LinkedList
+	List *linked.List
 }
 
-// NewStack is a type Stack consctructor
-func NewStack(name string, elements ...*ll.Elem) *Stack {
+// NewStack is a type Stack constructor
+func NewStack(name string, elements ...*linked.Elem) *Stack {
 	stack := &Stack{
 		Name: name,
-		List: ll.NewLinkedList("stack", elements[0]),
+		List: linked.NewList("stack", elements[0]),
 	}
 	for _, i := range elements[1:] {
 		stack.List.Append(i)
@@ -25,14 +25,14 @@ func NewStack(name string, elements ...*ll.Elem) *Stack {
 }
 
 // Push supports adding 1 or more Elems to the stack
-func (s *Stack) Push(elements ...*ll.Elem) {
+func (s *Stack) Push(elements ...*linked.Elem) {
 	for _, el := range elements {
 		s.List.Append(el)
 	}
 }
 
 // Pop removes the topmost Elem from the Stack and returns it
-func (s *Stack) Pop() *ll.Elem {
+func (s *Stack) Pop() *linked.Elem {
 	return s.List.PopTail()
 }
 
