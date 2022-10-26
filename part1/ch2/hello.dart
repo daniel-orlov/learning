@@ -1,7 +1,7 @@
 void main() {
-  helloDart();
+  hello("World");
 }
 
-void helloDart() {
-  print('Hello, Dart!');
+void hello(String name) {
+  print('Hello, $name!');
 }
