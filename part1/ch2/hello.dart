@@ -9,3 +9,6 @@ void main() {
 void hello(String name) {
   print("Hello, $name!");
 }
+
+/// Adding a one-liner version of the function 'hello'
+helloOneLiner(String name) => print('Hello, $name!');
