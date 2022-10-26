@@ -6,7 +6,7 @@ void main() {
   playGuessGame();
 
   print('Thanks for playing!');
-  // Ask the user if they want to play again
+  /// Ask the user if they want to play again
   print('Do you want to play again? (y/n)');
   String? answer = stdin.readLineSync();
   if (answer == 'y') {
@@ -15,7 +15,7 @@ void main() {
 }
 
 void playGuessGame() {
-  // Ask a user how many tries they want
+  /// Ask a user how many tries they want
   print('How many tries do you want?');
   String? input = stdin.readLineSync();
   int? tries = int.tryParse(input!);
@@ -24,10 +24,10 @@ void playGuessGame() {
   print('Okay, let\'s guess the number from 1 to 100 in $tries tries');
   print('Enter your guess.');
 
-  // Pick a random number between 1 and 100
+  /// Pick a random number between 1 and 100
   var number = new Random().nextInt(100) + 1;
 
-  // Read the user's input from the command line four times
+  /// Read the user's input from the command line four times
   for (var i = 0; i < tries!; i++) {
     var guessString = stdin.readLineSync();
     var guess = int.parse(guessString!);
@@ -38,7 +38,7 @@ void playGuessGame() {
     }
 
     print('Try another time...');
-    // Tell the user if the guess was too high or too low
+    /// Tell the user if the guess was too high or too low
     if (guess > number) {
       print('Your guess was too high');
     } else {
@@ -46,6 +46,6 @@ void playGuessGame() {
     }
   }
 
-  // The user has run out of tries, tell them the number
+  /// The user has run out of tries, tell them the number
   print('You almost got it! The number was $number');
 }
