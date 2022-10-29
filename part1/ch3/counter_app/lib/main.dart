@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Huginn Friends Counter',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -22,9 +22,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Huginn Friends Counter'),
     );
   }
 }
@@ -68,6 +68,11 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() => _counter--);
   }
 
+  // Resets the counter to 0
+  void _resetCounter() {
+    setState(() => _counter = 0);
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -102,6 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Image(image: Image.asset(
+                'huginn.jpeg',
+            ).image), // Image')),
             const Text(
               'You have pushed the button this many times:',
             ),
@@ -117,11 +125,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     backgroundColor: Colors.red,
                   ),
                   onPressed: _decrementCounter,
-                  child: const Text(
-                      "Decrement Counter",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                  child: const Icon(
+                      Icons.remove,
+                      color: Colors.white,
                   ),
                 ),
                 ElevatedButton(
@@ -129,11 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     backgroundColor: Colors.green,
                   ),
                   onPressed: _incrementCounter,
-                  child: const Text(
-                      "Increment Counter",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                  child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
                   ),
                 ),
               ],
@@ -142,9 +146,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: _resetCounter,
+        tooltip: 'Reset counter',
+        child: const Icon(Icons.refresh),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
