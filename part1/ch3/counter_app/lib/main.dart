@@ -43,6 +43,7 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
+  // every StatefulWidget has a createState() method that returns a State object
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -50,6 +51,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  // This method is private and it can only be called from within the class
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
