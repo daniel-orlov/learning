@@ -6,7 +6,7 @@ import (
 
 type S1 struct{}
 
-//Shadowed method
+// Shadowed method
 func (s1 S1) f() {
 	fmt.Println("S1.f()")
 }
@@ -18,7 +18,7 @@ type S2 struct {
 	S1
 }
 
-//Shadowing method
+// Shadowing method
 func (s2 S2) f() {
 	fmt.Println("S2.f()")
 }
