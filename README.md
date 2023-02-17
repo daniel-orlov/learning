@@ -10,12 +10,15 @@ Practice through a book.
 
 ## Go
 ### go-web-apps
-Coding while reading "Go: Building Web Applications" by Nathan Kozyra &amp; Mat Ryer
+Coding along while reading "Go: Building Web Applications" by Nathan Kozyra &amp; Mat Ryer
 
 ### go-patterns
 Patterns implementations in Go.<br>
 Based on Refactoring Guru website.
 
 ## Python
+### python-bootcamp
+My very first learning adventure. Practice through a Modern Python 3 Bootcamp course by Colt Steele.
+
 ### python-messenger
 SkillBox python intensive "Messenger".
