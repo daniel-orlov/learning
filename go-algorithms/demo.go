@@ -1,7 +1,8 @@
-package main
+package go_algorithms
 
 import (
 	"fmt"
+
 	"recursion"
 	"search"
 	"sorting"
