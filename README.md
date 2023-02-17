@@ -10,3 +10,6 @@ Practice through a book.
 
 ## go-web-apps
 Coding while reading "Go: Building Web Applications" by Nathan Kozyra &amp; Mat Ryer
+
+## python-messenger
+SkillBox python intensive "Messenger".
