@@ -12,7 +12,7 @@ Practice through a book.
 ### go-web-apps
 Coding while reading "Go: Building Web Applications" by Nathan Kozyra &amp; Mat Ryer
 
-# go-patterns
+### go-patterns
 Patterns implementations in Go.<br>
 Based on Refactoring Guru website.
 
