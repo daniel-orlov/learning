@@ -20,6 +20,9 @@ Coding along while reading "Go: Building Web Applications" by Nathan Kozyra &amp
 Patterns implementations in Go.<br>
 Based on Refactoring Guru website.
 
+### go-internals
+Looking under the hood. Join me!
+
 ## Python
 ### python-bootcamp
 My very first learning adventure. Practice through a Modern Python 3 Bootcamp course by Colt Steele.
