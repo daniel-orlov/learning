@@ -40,4 +40,4 @@ SkillBox python intensive "Messenger".
 Python Django studies.
 
 ## Java
-
+Fun fact - if you start typing "I don't" the first thing that comes from Copilot is "I don't like Java".
