@@ -38,6 +38,16 @@ node_modules
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+### Go Patch ###
+/vendor/
+/Godeps/
+
+### GoLand ###
+/.idea/
+/not_githubbed/
+go-bootcamp/exercises/069.go
+*.env
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
 # created by virtualenv automatically
