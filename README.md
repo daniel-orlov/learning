@@ -24,3 +24,4 @@ My very first learning adventure. Practice through a Modern Python 3 Bootcamp co
 SkillBox python intensive "Messenger".
 
 ### python-django
+Python Django studies.
