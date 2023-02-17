@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/mux"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 /*
@@ -20,7 +21,7 @@ const (
 )
 */
 
-//keeping Db-connection global for DRYness
+// keeping Db-connection global for DRYness
 var Db *pgxpool.Pool
 
 /*
