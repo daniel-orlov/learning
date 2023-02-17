@@ -9,6 +9,10 @@ Practice through Web Development Course by Angela Yu.
 Practice through a book.
 
 ## Go
+### go-bootcamp
+My second learning adventure. Practice through a "The Ultimate Comprehensive Course on Go" course.
+And also through a "Mail.Ru Go Web Services" course.
+
 ### go-web-apps
 Coding along while reading "Go: Building Web Applications" by Nathan Kozyra &amp; Mat Ryer
 
@@ -25,17 +29,3 @@ SkillBox python intensive "Messenger".
 
 ### python-django
 Python Django studies.
-Hello again!
-
-Here I am going to put the things I learn in "The Ultimate Comprehensive Course on Go"
-
-I am so excited with this one!
-
-Good luck to you in your work too.
-
-DL
-
-upd0: The course turned out to be excellent.
-
-upd1: I continue practising Go here with "Mail.Ru Go Web Services" course.
-
