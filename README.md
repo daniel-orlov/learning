@@ -23,6 +23,9 @@ Based on Refactoring Guru website.
 ### go-algorithms
 Algorithms implemented using Go.
 
+### go-data-structures
+Data structures implemented using Go
+
 ### go-internals
 Looking under the hood. Join me!
 
@@ -35,4 +38,3 @@ SkillBox python intensive "Messenger".
 
 ### python-django
 Python Django studies.
-
