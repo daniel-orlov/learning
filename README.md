@@ -20,6 +20,9 @@ Coding along while reading "Go: Building Web Applications" by Nathan Kozyra &amp
 Patterns implementations in Go.<br>
 Based on Refactoring Guru website.
 
+### go-algorithms
+Algorithms implemented using Go.
+
 ### go-internals
 Looking under the hood. Join me!
 
@@ -32,3 +35,4 @@ SkillBox python intensive "Messenger".
 
 ### python-django
 Python Django studies.
+
