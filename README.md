@@ -6,10 +6,6 @@ My _"why"_ behind learning how to code is pretty simple:
 I believe that breaking down global threats into small problems and solving them step by step is one of the possible ways to ensure we are taking a set of actions that are most likely to result in a better future for all of us.
 And programming has already proven to be an effective tool to reshape the reality and make a large-scale impact with (relatively) small efforts.
 
-## Frontend
-### web-development
-Practice through Web Development Course by Angela Yu.
-
 ## Go
 ### go-bootcamp
 My second learning adventure. Practice through a "The Ultimate Comprehensive Course on Go" course.
